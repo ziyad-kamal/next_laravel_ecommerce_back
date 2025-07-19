@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUser_infoRequest;
-use App\Http\Requests\UpdateUser_infoRequest;
-use App\Models\User_info;
+use App\Http\Requests\StorereviewRequest;
+use App\Http\Requests\UpdatereviewRequest;
+use App\Models\review;
 
-class UserInfoController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class UserInfoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUser_infoRequest $request)
+    public function store(StorereviewRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class UserInfoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User_info $user_info)
+    public function show(review $review)
     {
         //
     }
@@ -43,7 +43,7 @@ class UserInfoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User_info $user_info)
+    public function edit(review $review)
     {
         //
     }
@@ -51,7 +51,7 @@ class UserInfoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUser_infoRequest $request, User_info $user_info)
+    public function update(UpdatereviewRequest $request, review $review)
     {
         //
     }
@@ -59,7 +59,7 @@ class UserInfoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User_info $user_info)
+    public function destroy(review $review)
     {
         //
     }

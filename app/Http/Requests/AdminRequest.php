@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
-class UserRequest extends FormRequest
+class AdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
     {
         return [
             'name'     => 'required|string|max:50|min:3',
-            'email'    => ['required', 'email', 'max:50', 'min:10', Rule::unique('users')->ignore($this->user)],
+            'email'    => ['required', 'email', 'max:50', 'min:10', Rule::unique('admins')->ignore($this->user)],
             'password' => ['required', 'confirmed', 'string', Password::min(8),
 
                 // ->mixedCase()
