@@ -15,7 +15,7 @@ interface CategoryRepositoryInterface
 
     public function show(Category $brand): mixed;
 
-    public function update(CategoryRequest $request): void;
+    public function update(CategoryRequest $request, Category $category): void;
 
     public function delete(Category $brand): void;
 }

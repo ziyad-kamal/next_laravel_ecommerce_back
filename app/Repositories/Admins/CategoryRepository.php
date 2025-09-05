@@ -78,12 +78,19 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     // MARK: update
-    public function update(CategoryRequest $request): void
+    public function update(CategoryRequest $request, Category $category): void
     {
         $categories  = $request->categories;
 
+        $image = $category->image;
+        if ($request->has('image')) {
+            $image = $this->uploadImage($request, 'category', 300);
+        }
+
         foreach ($categories as $category) {
-            Category::where('id', $category['id'])->update(['name' => $category['name']]);
+            Category::query()
+                ->where('id', $category['id'])
+                ->update(['name' => $category['name'], 'image' => $image]);
         }
     }
 

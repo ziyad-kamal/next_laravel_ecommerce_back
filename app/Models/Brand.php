@@ -12,8 +12,13 @@ class Brand extends Model
 
     protected $guarded = ['id'];
 
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
+
     public function scopeSelection(Builder $query): Builder
     {
-        return $query->select('name', 'trans_lang', 'id', 'created_at');
+        return $query->select('name', 'trans_lang', 'id', 'created_at', 'admin_id');
     }
 }

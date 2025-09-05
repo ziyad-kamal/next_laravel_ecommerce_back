@@ -24,6 +24,7 @@ class BrandRepository implements BrandRepositoryInterface
 
         return Brand::query()
             ->selection()
+            ->with('admin')
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
             ->paginate(5);

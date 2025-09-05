@@ -22,18 +22,16 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $method = $this->method();
-
         return [
             'categories'               => 'required|array|min:1',
             'image'                    => [
-                'required',
+                'required_without:categories.0.id',
                 File::types(['gif', 'png', 'jpg', 'jepg'])
                     ->max('10mb'),
             ],
             'categories.*.name'        => 'required|string|max:15|min:2',
-            'categories.*.trans_lang'  => $method == 'put' ? '' : 'required'.'|string|min:2',
-            'categories.*.id'          => $method == 'put' ? 'required' : ''.'|string|min:2',
+            'categories.*.trans_lang'  => 'required_without:categories.0.id|string|min:2',
+            'categories.*.id'          => 'required_without:categories.0.trans_lang|string|min:2',
         ];
     }
 }

@@ -42,9 +42,9 @@ class CategoryController extends Controller
     }
 
     // MARK: update
-    public function update(CategoryRequest $request): JsonResponse
+    public function update(CategoryRequest $request, Category $category): JsonResponse
     {
-        $this->categoryRepository->update($request);
+        $this->categoryRepository->update($request, $category);
 
         return $this->returnSuccess('you successfully update category');
     }
