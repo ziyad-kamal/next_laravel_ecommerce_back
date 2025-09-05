@@ -1,66 +1,59 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admins;
 
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{CategoryRequest};
+use App\Http\Resources\CategoryResource;
+use App\Interfaces\Admins\CategoryRepositoryInterface;
 use App\Models\Category;
+use App\Traits\{GetDataByLang, Response};
+use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use GetDataByLang,Response;
+
+    public function __construct(protected CategoryRepositoryInterface $categoryRepository) {}
+
+    // MARK: index
+    public function index(Request $request): AnonymousResourceCollection
     {
-        //
+        $categories = $this->categoryRepository->index($request);
+
+        return CategoryResource::collection($categories);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // MARK: store
+    public function store(CategoryRequest $request): JsonResponse
     {
-        //
+        $this->categoryRepository->store($request);
+
+        return $this->returnSuccess('you successfully created category');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCategoryRequest $request)
+    // MARK: show
+    public function show(Category $category): AnonymousResourceCollection
     {
-        //
+        $allCategories = $this->categoryRepository->show($category);
+
+        return CategoryResource::collection($allCategories);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
+    // MARK: update
+    public function update(CategoryRequest $request): JsonResponse
     {
-        //
+        $this->categoryRepository->update($request);
+
+        return $this->returnSuccess('you successfully update category');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
+    // MARK: destroy
+    public function destroy(Category $category): JsonResponse
     {
-        //
-    }
+        $this->categoryRepository->delete($category);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCategoryRequest $request, Category $category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
-        //
+        return $this->returnSuccess('you successfully deleted category');
     }
 }

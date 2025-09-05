@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -24,20 +23,21 @@ class AdminRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'     => 'required|string|max:50|min:3',
-            'email'    => ['required', 'email', 'max:50', 'min:10', Rule::unique('admins')->ignore($this->user)],
-            'password' => ['required', 'confirmed', 'string', Password::min(8),
+        $method = $this->method();
 
-                // ->mixedCase()
-                // ->numbers()
-                // ->symbols()
-            ],
-        ];
-    }
+        if ($this->method() !== 'DELETE') {
+            return [
+                'name'     => 'required|string|max:50|min:3',
+                'email'    => ['required', 'email', 'max:50', 'min:10', Rule::unique('admins')->ignore($this->admin)],
+                'password' => ['required', 'confirmed', 'string', Password::min(8),
 
-    protected function passedValidation(): void
-    {
-        $this->merge(['password' => Hash::make($this->password)]);
+                    // ->mixedCase()
+                    // ->numbers()
+                    // ->symbols()
+                ],
+            ];
+        }
+
+        return [];
     }
 }
