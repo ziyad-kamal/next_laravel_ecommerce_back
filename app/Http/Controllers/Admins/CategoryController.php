@@ -7,15 +7,18 @@ use App\Http\Requests\{CategoryRequest};
 use App\Http\Resources\CategoryResource;
 use App\Interfaces\Admins\CategoryRepositoryInterface;
 use App\Models\Category;
-use App\Traits\{GetDataByLang, Response};
+use App\Traits\{CanAccessAdminPanel, GetDataByLang, Response};
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
-    use GetDataByLang,Response;
+    use CanAccessAdminPanel,GetDataByLang,Response;
 
-    public function __construct(protected CategoryRepositoryInterface $categoryRepository) {}
+    public function __construct(protected CategoryRepositoryInterface $categoryRepository)
+    {
+        $this->canAccessAdminPanel();
+    }
 
     // MARK: index
     public function index(Request $request): AnonymousResourceCollection

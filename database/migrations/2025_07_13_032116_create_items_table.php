@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 50);
             $table->string('slug', 55);
             $table->enum('approve', ['approved', 'pending', 'refused'])->default('pending');
-            $table->string('trans', 5);
+            $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('vendor_id')->nullable()->constrained('vendors')->cascadeOnDelete()->cascadeOnUpdate();

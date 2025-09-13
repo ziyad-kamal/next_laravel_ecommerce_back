@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('trans', 5);
+            $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('brands')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

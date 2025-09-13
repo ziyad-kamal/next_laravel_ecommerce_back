@@ -21,11 +21,11 @@ class CategorySeeder extends Seeder
             $date      = $faker->dateTimeBetween('-5 years');
 
             $category_id = Category::insertGetId([
-                'name'              => $category->random(),
-                'trans'             => 'en',
-                'admin_id'          => $admins->random(),
-                'created_at'        => $date,
-                'updated_at'        => $date,
+                'name'                   => $category->random(),
+                'trans_lang'             => 'en',
+                'admin_id'               => $admins->random(),
+                'created_at'             => $date,
+                'updated_at'             => $date,
             ]);
 
             Category::find($category_id)->update(['trans_of' => $category_id]);

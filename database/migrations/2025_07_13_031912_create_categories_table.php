@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 30);
             $table->string('image', 70);
-            $table->string('trans', 5);
+            $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

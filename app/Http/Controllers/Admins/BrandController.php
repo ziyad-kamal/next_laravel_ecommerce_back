@@ -7,15 +7,18 @@ use App\Http\Requests\{BrandRequest};
 use App\Http\Resources\BrandResource;
 use App\Interfaces\Admins\BrandRepositoryInterface;
 use App\Models\Brand;
-use App\Traits\{GetDataByLang, Response};
+use App\Traits\{CanAccessAdminPanel, GetDataByLang, Response};
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BrandController extends Controller
 {
-    use GetDataByLang,Response;
+    use CanAccessAdminPanel,GetDataByLang,Response;
 
-    public function __construct(protected BrandRepositoryInterface $brandRepository) {}
+    public function __construct(protected BrandRepositoryInterface $brandRepository)
+    {
+        $this->canAccessAdminPanel();
+    }
 
     // MARK: index
     public function index(Request $request): AnonymousResourceCollection

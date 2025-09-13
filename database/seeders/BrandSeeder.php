@@ -21,11 +21,11 @@ class BrandSeeder extends Seeder
             $date   = $faker->dateTimeBetween('-5 years');
 
             $brand_id = Brand::insertGetId([
-                'name'              => $brand->random(),
-                'trans'             => 'en',
-                'admin_id'          => $admins->random(),
-                'created_at'        => $date,
-                'updated_at'        => $date,
+                'name'                   => $brand->random(),
+                'trans_lang'             => 'en',
+                'admin_id'               => $admins->random(),
+                'created_at'             => $date,
+                'updated_at'             => $date,
             ]);
 
             Brand::find($brand_id)->update(['trans_of' => $brand_id]);

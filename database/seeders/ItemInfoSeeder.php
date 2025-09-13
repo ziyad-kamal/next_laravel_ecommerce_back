@@ -20,14 +20,14 @@ class ItemInfoSeeder extends Seeder
             $date      = $faker->dateTimeBetween('-5 years');
 
             $itemInfoId = Item_info::insertGetId([
-                'description'       => $faker->sentence(),
-                'photo'             => 'sneakers.jpeg',
-                'condition'         => $faker->randomElement(['new', 'used']),
-                'price'             => $faker->numberBetween(100, 5000),
-                'trans'             => 'en',
-                'item_id'           => $itemId,
-                'created_at'        => $date,
-                'updated_at'        => $date,
+                'description'            => $faker->sentence(),
+                'photo'                  => 'sneakers.jpeg',
+                'condition'              => $faker->randomElement(['new', 'used']),
+                'price'                  => $faker->numberBetween(100, 5000),
+                'trans_lang'             => 'en',
+                'item_id'                => $itemId,
+                'created_at'             => $date,
+                'updated_at'             => $date,
             ]);
 
             Item_info::find($itemInfoId)->update(['trans_of' => $itemInfoId]);

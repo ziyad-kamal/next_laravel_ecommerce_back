@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('item_infos', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->string('photo', 80);
             $table->enum('condition', ['new', 'used']);
             $table->mediumInteger('price');
-            $table->string('trans', 5);
+            $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('item_id')->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

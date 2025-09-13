@@ -27,7 +27,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->with('admin')
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
-            ->paginate(5);
+            ->paginate(10);
     }
 
     // MARK: store
@@ -78,19 +78,32 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     // MARK: update
-    public function update(CategoryRequest $request, Category $category): void
+    public function update(CategoryRequest $request, Category $defaultCategory): void
     {
         $categories  = $request->categories;
+        $adminId     = $request->user()->id;
 
-        $image = $category->image;
+        $image = $defaultCategory->image;
         if ($request->has('image')) {
             $image = $this->uploadImage($request, 'category', 300);
         }
 
         foreach ($categories as $category) {
-            Category::query()
-                ->where('id', $category['id'])
-                ->update(['name' => $category['name'], 'image' => $image]);
+            if ($category['id'] != 0) {
+                Category::query()
+                    ->where('id', $category['id'])
+                    ->update(['name' => $category['name'], 'image' => $image]);
+            } else {
+                Category::create([
+                    'trans_lang'        => $category['trans_lang'],
+                    'trans_of'          => $defaultCategory->id,
+                    'name'              => $category['name'],
+                    'image'             => $image,
+                    'admin_id'          => $adminId,
+                    'created_at'        => now(),
+                ]);
+            }
+
         }
     }
 

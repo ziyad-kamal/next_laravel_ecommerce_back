@@ -27,7 +27,7 @@ class AdminController extends Controller
         $keyToSort = $request->keyToSort ?? 'created_at';
         $direction = $request->direction ?? 'desc';
 
-        $admins = Admin::selection()->orderBy($keyToSort, $direction)->paginate(5);
+        $admins = Admin::selection()->orderBy($keyToSort, $direction)->paginate(10);
 
         return AdminResource::collection($admins);
     }

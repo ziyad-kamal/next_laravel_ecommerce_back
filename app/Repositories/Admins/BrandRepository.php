@@ -27,7 +27,7 @@ class BrandRepository implements BrandRepositoryInterface
             ->with('admin')
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
-            ->paginate(5);
+            ->paginate(10);
     }
 
     // MARK: store

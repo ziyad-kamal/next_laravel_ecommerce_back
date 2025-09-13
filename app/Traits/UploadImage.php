@@ -9,19 +9,28 @@ use Intervention\Image\ImageManager;
 
 trait UploadImage
 {
-    public function uploadImage(FormRequest $request, string $path, ?int $width = null, ?int $height = null): string
+    public function uploadImage(FormRequest $request, string $path, ?int $width = null): string
     {
         $file = $request->file('image');
         $name = $file->hashName();
 
         $manager = new ImageManager(new Driver);
 
-        $image = $manager->read($file)->scale($width);
+        $encodedImage = $manager->read($file)->scale($width)->toWebp();
 
-        $encodedImage = $image->toWebp();
+        $path = 'images/'.$path.'/'.$name;
 
-        Storage::put('images/'.$path.'/'.$name, $encodedImage);
+        Storage::put($path, $encodedImage);
 
-        return $name;
+        return asset('/storage/'.$path);
+    }
+
+    // MARK: dropZoneUpload
+    public function dropZoneUpload(FormRequest $request, string $path): array
+    {
+        $path           = $this->uploadImage($request, $path, 100);
+        $original_name  = $request->file('image')->getClientOriginalName();
+
+        return ['path' => $path, 'original_name' => $original_name];
     }
 }

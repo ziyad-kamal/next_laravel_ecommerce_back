@@ -30,8 +30,8 @@ class CategoryRequest extends FormRequest
                     ->max('10mb'),
             ],
             'categories.*.name'        => 'required|string|max:15|min:2',
-            'categories.*.trans_lang'  => 'required_without:categories.0.id|string|min:2',
-            'categories.*.id'          => 'required_without:categories.0.trans_lang|string|min:2',
+            'categories.*.trans_lang'  => 'required|string|min:2',
+            'categories.*.id'          => 'nullable|numeric',
         ];
     }
 }
