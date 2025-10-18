@@ -23,9 +23,9 @@ class ItemController extends Controller
     // MARK: index
     public function index(Request $request): AnonymousResourceCollection
     {
-        $categories = $this->itemRepository->index($request);
+        $items = $this->itemRepository->index($request);
 
-        return ItemResource::collection($categories);
+        return ItemResource::collection($items);
     }
 
     // MARK: store
@@ -53,9 +53,9 @@ class ItemController extends Controller
     }
 
     // MARK: destroy
-    public function destroy(Item $items): JsonResponse
+    public function destroy(Item $item): JsonResponse
     {
-        $this->itemRepository->delete($items);
+        $this->itemRepository->delete($item);
 
         return $this->returnSuccess('you successfully deleted item');
     }

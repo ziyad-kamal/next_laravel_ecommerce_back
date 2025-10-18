@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Admins\{AuthRepositoryInterface as AdminsAuthRepositoryInterface, BrandRepositoryInterface as AdminsBrandsRepositoryInterface, CategoryRepositoryInterface as AdminsCategoryRepositoryInterface, FileRepositoryInterface as AdminsFileRepositoryInterface, ItemRepositoryInterface as AdminsItemRepositoryInterface};
+use App\Interfaces\Admins\{AuthRepositoryInterface as AdminsAuthRepositoryInterface, BrandRepositoryInterface as AdminsBrandsRepositoryInterface, CategoryRepositoryInterface as AdminsCategoryRepositoryInterface, FileRepositoryInterface as AdminsFileRepositoryInterface, ItemRepositoryInterface as AdminsItemRepositoryInterface, OrderRepositoryInterface as AdminsOrderRepositoryInterface};
 use App\Interfaces\Users\AuthRepositoryInterface;
-use App\Repositories\Admins\{AuthRepository as AdminsAuthRepository, BrandRepository as AdminsBrandRepository, CategoryRepository as AdminsCategoryRepository, FileRepository as AdminsFileRepository, ItemRepository as AdminsItemsRepository};
+use App\Repositories\Admins\{AuthRepository as AdminsAuthRepository, BrandRepository as AdminsBrandRepository, CategoryRepository as AdminsCategoryRepository, FileRepository as AdminsFileRepository, ItemRepository as AdminsItemsRepository,OrderRepository as AdminsOrderRepository};
 use App\Repositories\Users\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +24,7 @@ class RepoServiceProvider extends ServiceProvider
         $this->app->bind(AdminsCategoryRepositoryInterface::class, AdminsCategoryRepository::class);
         $this->app->bind(AdminsItemRepositoryInterface::class, AdminsItemsRepository::class);
         $this->app->bind(AdminsFileRepositoryInterface::class, AdminsFileRepository::class);
+        $this->app->bind(AdminsOrderRepositoryInterface::class, AdminsOrderRepository::class);
 
     }
 
@@ -39,6 +40,8 @@ class RepoServiceProvider extends ServiceProvider
             AdminsCategoryRepositoryInterface::class,
             AdminsItemRepositoryInterface::class,
             AdminsFileRepositoryInterface::class,
+            AdminsOrderRepositoryInterface::class,
+
         ];
     }
 

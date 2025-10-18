@@ -35,7 +35,7 @@ class FileRepository implements FileRepositoryInterface
             $images_arr = [];
             if ($images != []) {
                 foreach ($images as $image) {
-                    $path = $image['path'];
+                    $path = $image;
 
                     $images_arr[] = [
                         'path'       => $path,
@@ -56,26 +56,27 @@ class FileRepository implements FileRepositoryInterface
     // MARK: upload_image
     public function upload_file(FormRequest $request): array
     {
-        $image_path = $this->dropZoneUpload($request, 'images');
+        $image_path = $this->dropZoneUpload($request, 'items');
 
         return $image_path;
     }
 
     // MARK: destroy_image
-    public function destroy_file(string $image, string $dir): void
+    public function destroy_file(Request $request, string $tableName): void
     {
-        $path = 'public/'.$dir.'/';
+        $images  = $request->images;
 
-        $storage_image = Storage::has($path.$image);
-        $image_query   = DB::table('project_images')->where('image', $image);
-        $db_image      = $image_query->first();
-
-        if (! $storage_image || ! $db_image) {
-            // throw new GeneralNotFoundException('image');
+        $locationArr = [];
+        foreach ($images as $image) {
+            $location      = str_replace(url('storage'), '', $image);
+            $locationArr[] = $location;
         }
 
-        Storage::delete($path.$image);
+        $isFileDeleted    = Storage::disk('public')->delete($locationArr);
+        $isDbImageDeleted = DB::table($tableName)->whereIn('path', $images)->delete();
 
-        $image_query->delete();
+        if (! $isFileDeleted || ! $isDbImageDeleted) {
+            // throw new GeneralNotFoundException('image');
+        }
     }
 }

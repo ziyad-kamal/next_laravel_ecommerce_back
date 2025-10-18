@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DropzoneRequest;
 use App\Interfaces\Admins\FileRepositoryInterface;
 use App\Traits\CanAccessAdminPanel;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\{JsonResponse, Request};
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
@@ -21,9 +21,9 @@ class FileController extends Controller
     // MARK: upload
     public function upload(DropzoneRequest $request): JsonResponse
     {
-        $file_name = $this->fileRepository->upload_file($request);
+        $file = $this->fileRepository->upload_file($request);
 
-        return response()->json(['file_name' => $file_name['file_name'], 'original_name' => $file_name['original_name']]);
+        return response()->json(['path' => $file['path'], 'originalName' => $file['originalName'], 'message' => 'you uploaded image successfully']);
     }
 
     // MARK: download
@@ -33,10 +33,10 @@ class FileController extends Controller
     }
 
     // MARK: destroy
-    public function destroy(string $file, string $type, string $dir): JsonResponse
+    public function destroy(Request $request, string $tableName): JsonResponse
     {
-        $this->fileRepository->destroy_file($file, $type, $dir);
+        $this->fileRepository->destroy_file($request, $tableName);
 
-        return response()->json(['success' => 'you deleted '.$type.' successfully']);
+        return response()->json(['message' => 'you deleted image successfully']);
     }
 }

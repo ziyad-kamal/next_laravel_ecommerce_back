@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admins\{AdminController, AuthController, BrandController, CategoryController, ItemController, LangController, UserController};
-use App\Http\Controllers\Users\FileController;
+use App\Http\Controllers\Admins\{AdminController, AuthController, BrandController, CategoryController, FileController, ItemController, LangController, OrderController, SearchController, UserController};
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -19,11 +18,18 @@ Route::apiResource('/user', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('/brand', BrandController::class)->middleware('auth:sanctum');
 Route::apiResource('/category', CategoryController::class)->middleware('auth:sanctum');
 Route::apiResource('/item', ItemController::class)->middleware('auth:sanctum');
+Route::apiResource('/order', OrderController::class)->middleware('auth:sanctum');
 
-Route::controller(FileController::class)->group(function () {
+Route::controller(FileController::class)->middleware('auth:sanctum')->group(function () {
     Route::post('/file/upload', 'upload');
-    Route::get('/files/download/{name}', 'download');
-    Route::delete('/files/delete/{name}', 'destroy');
+    Route::get('/file/download/{name}', 'download');
+    Route::post('/file/delete/{tableName}', 'destroy');
+});
+
+Route::controller(SearchController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get('/search/categories', 'categories');
+    Route::get('/search/brands', 'brands');
+
 });
 
 Route::post('/lang', [LangController::class, 'store'])->middleware('auth:sanctum');

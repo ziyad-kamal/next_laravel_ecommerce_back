@@ -3,6 +3,7 @@
 namespace App\Interfaces\Admins;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 interface FileRepositoryInterface
@@ -13,5 +14,5 @@ interface FileRepositoryInterface
 
     public function upload_file(FormRequest $request): array;
 
-    public function destroy_file(string $file, string $dir): void;
+    public function destroy_file(Request $request, string $tableName): void;
 }

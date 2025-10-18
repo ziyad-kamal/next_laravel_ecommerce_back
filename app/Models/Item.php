@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ItemApproval;
 use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
@@ -45,6 +46,13 @@ class Item extends Model
 
     public function scopeSelection(Builder $query): Builder
     {
-        return $query->select('name', 'id', 'created_at', 'admin_id', 'trans_lang', 'approve', 'brand_id', 'category_id');
+        return $query->select('name', 'id', 'created_at', 'admin_id', 'trans_lang', 'approval', 'brand_id', 'category_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'approval' => ItemApproval::class,
+        ];
     }
 }

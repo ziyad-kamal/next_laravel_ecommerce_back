@@ -8,7 +8,7 @@ trait CanAccessAdminPanel
 {
     public function canAccessAdminPanel()
     {
-        $userEmail = request()->user()->email;
+        $userEmail = request()->user()?->email;
 
         $userModel = DB::table('personal_access_tokens')
             ->where('name', $userEmail)

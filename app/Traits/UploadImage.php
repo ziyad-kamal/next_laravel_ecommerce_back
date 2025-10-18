@@ -29,8 +29,8 @@ trait UploadImage
     public function dropZoneUpload(FormRequest $request, string $path): array
     {
         $path           = $this->uploadImage($request, $path, 100);
-        $original_name  = $request->file('image')->getClientOriginalName();
+        $originalName  = $request->file('image')->getClientOriginalName();
 
-        return ['path' => $path, 'original_name' => $original_name];
+        return ['path' => $path, 'originalName' => $originalName];
     }
 }

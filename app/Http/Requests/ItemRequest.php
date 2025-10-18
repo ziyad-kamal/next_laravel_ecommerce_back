@@ -25,7 +25,7 @@ class ItemRequest extends FormRequest
     {
         return [
             'items'                   => 'required|array|min:1',
-            'images.*.path'           => 'required|string|max:150',
+            'images'           => $this->_method == 'put' ? 'nullable' : 'required'.'|array|min:1',
             'items.*.name'            => 'required|string|max:30|min:3',
             'items.*.brand_id'        => 'required|numeric',
             'items.*.category_id'     => 'required|numeric',

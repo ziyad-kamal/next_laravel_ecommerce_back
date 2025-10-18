@@ -4,11 +4,11 @@ namespace App\Repositories\Admins;
 
 use App\Http\Requests\{ItemRequest};
 use App\Interfaces\Admins\{FileRepositoryInterface, ItemRepositoryInterface};
-use App\Models\{Item, Item_info};
+use App\Models\{Item, Item_files, Item_info};
 use App\Traits\{CreateSlug, GetDataByLang, UploadImage};
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Cache};
+use Illuminate\Support\Facades\{Cache, Storage};
 
 class ItemRepository implements ItemRepositoryInterface
 {
@@ -39,14 +39,14 @@ class ItemRepository implements ItemRepositoryInterface
         $slug        = $this->createSlug('items', 'name', $defaultItem['name']);
 
         $defaultItemId = Item::insertGetId([
-            'trans_lang'           => $defaultItem['trans_lang'],
-            'name'                 => $defaultItem['name'],
-            'slug'                 => $slug,
-            'approve'              => 'approved',
-            'admin_id'             => $adminId,
-            'category_id'          => $defaultItem['category_id'],
-            'brand_id'             => $defaultItem['brand_id'],
-            'created_at'           => now(),
+            'trans_lang'            => $defaultItem['trans_lang'],
+            'name'                  => $defaultItem['name'],
+            'slug'                  => $slug,
+            'approval'              => 1,
+            'admin_id'              => $adminId,
+            'category_id'           => $defaultItem['category_id'],
+            'brand_id'              => $defaultItem['brand_id'],
+            'created_at'            => now(),
         ]);
 
         Item_info::create([
@@ -65,35 +65,32 @@ class ItemRepository implements ItemRepositoryInterface
         $otherItems = $this->getDataByOtherLangs($items, $request);
 
         if ($otherItems !== []) {
-            $otherItemsArr     = [];
-            $otherItemsInfoArr = [];
+
             foreach ($otherItems as $otherItem) {
                 $slug = $this->createSlug('items', 'name', $otherItem['name']);
 
-                $otherItemsArr[] = [
-                    'trans_lang'           => $otherItem['trans_lang'],
-                    'trans_of'             => $defaultItemId,
-                    'name'                 => $otherItem['name'],
-                    'slug'                 => $slug,
-                    'approve'              => 'approved',
-                    'admin_id'             => $adminId,
-                    'category_id'          => $otherItem['category_id'],
-                    'brand_id'             => $otherItem['brand_id'],
-                    'created_at'           => now(),
-                ];
+                $itemId = Item::insertGetId([
+                    'trans_lang'            => $otherItem['trans_lang'],
+                    'trans_of'              => $defaultItemId,
+                    'name'                  => $otherItem['name'],
+                    'slug'                  => $slug,
+                    'approval'              => 1,
+                    'admin_id'              => $adminId,
+                    'category_id'           => $otherItem['category_id'],
+                    'brand_id'              => $otherItem['brand_id'],
+                    'created_at'            => now(),
+                ]);
 
-                $otherItemsInfoArr[] = [
+                Item_info::insert([
                     'trans_lang'             => $otherItem['trans_lang'],
                     'trans_of'               => $defaultItemId,
                     'description'            => $otherItem['description'],
                     'price'                  => $otherItem['price'],
                     'condition'              => $otherItem['condition'],
-                    'item_id'                => $defaultItemId,
-                ];
+                    'item_id'                => $itemId,
+                ]);
             }
 
-            Item::insert($otherItemsArr);
-            Item_info::insert($otherItemsInfoArr);
         }
     }
 
@@ -161,6 +158,18 @@ class ItemRepository implements ItemRepositoryInterface
     // MARK: delete
     public function delete(Item $item): void
     {
+        $images      = Item_files::where('item_id', $item->id)->pluck('path')->toArray();
+
+        if ($images != []) {
+            $locationArr = [];
+            foreach ($images as $image) {
+                $location      = str_replace(url('storage'), '', $image);
+                $locationArr[] = $location;
+            }
+
+            Storage::disk('public')->delete($locationArr);
+        }
+
         Item::where('trans_of', $item->trans_of)->delete();
     }
 }

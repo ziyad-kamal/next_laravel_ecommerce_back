@@ -1,66 +1,65 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admins;
 
-use App\Http\Requests\StoreorderRequest;
-use App\Http\Requests\UpdateorderRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{OrderRequest};
+use App\Http\Resources\OrderResource;
+use App\Interfaces\Admins\OrderRepositoryInterface;
 use App\Models\order;
+use App\Traits\{CanAccessAdminPanel, Response};
+use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class OrderController extends Controller
 {
+    use CanAccessAdminPanel,Response;
+
+    public function __construct(protected OrderRepositoryInterface $orderRepository)
+    {
+        $this->canAccessAdminPanel();
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // MARK: index
+    public function index(Request $request): AnonymousResourceCollection
     {
-        //
+        $orders = $this->orderRepository->index($request);
+
+        return orderResource::collection($orders);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // MARK: store
+    public function store(orderRequest $request): JsonResponse
     {
-        //
+        $this->orderRepository->store($request);
+
+        return $this->returnSuccess('you successfully created order');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreorderRequest $request)
+    // MARK: show
+    public function show(Order $order): AnonymousResourceCollection
     {
-        //
+        $allOrders = $this->orderRepository->show($order);
+
+        return OrderResource::collection($allOrders);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(order $order)
+    // MARK: update
+    public function update(orderRequest $request, Order $order): JsonResponse
     {
-        //
+        $this->orderRepository->update($request, $order);
+
+        return $this->returnSuccess('you successfully updated order');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(order $order)
+    // MARK: destroy
+    public function destroy(Order $order): JsonResponse
     {
-        //
-    }
+        $this->orderRepository->delete($order);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateorderRequest $request, order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(order $order)
-    {
-        //
+        return $this->returnSuccess('you successfully deleted order');
     }
 }
