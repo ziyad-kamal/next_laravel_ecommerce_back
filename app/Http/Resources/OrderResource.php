@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,7 @@ class OrderResource extends JsonResource
             'total_amount'          => $this->total_amount,
             'user_name'             => $this->user?->name,
             'items'                 => ItemResource::collection($this->whenLoaded('items')),
-            'created_at'            => $this->created_at,
+            'created_at'            => Carbon::parse($this->created_at)->diffForHumans(),
             'updated_at'            => $this->updated_at,
         ];
     }
