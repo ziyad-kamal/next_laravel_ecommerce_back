@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('admin_id')->nullable()->constrained('admins')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('vendor_id')->nullable()->constrained('vendors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
