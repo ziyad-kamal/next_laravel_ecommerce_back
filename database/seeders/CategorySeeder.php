@@ -22,6 +22,7 @@ class CategorySeeder extends Seeder
 
             $category_id = Category::insertGetId([
                 'name'                   => $category->random(),
+                'image'                  => 'image',
                 'trans_lang'             => 'en',
                 'admin_id'               => $admins->random(),
                 'created_at'             => $date,

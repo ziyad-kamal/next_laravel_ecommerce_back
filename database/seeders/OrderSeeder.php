@@ -23,7 +23,7 @@ class OrderSeeder extends Seeder
             $order = Order::create([
                 'bank_trans_id' => $faker->numberBetween(5000000, 6000000),
                 'total_amount'  => $faker->numberBetween(500, 6000),
-                'state'         => $faker->numberBetween(0, 6),
+                'state'         => $faker->numberBetween(1, 5),
                 'user_id'       => $usersIds->random(),
                 'created_at'    => $date,
                 'updated_at'    => $date,

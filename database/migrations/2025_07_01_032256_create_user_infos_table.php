@@ -16,10 +16,9 @@ return new class extends Migration
             $table->string('address', 150);
             $table->bigInteger('phone', false, true);
             $table->string('card_type', 30)->nullable();
-            $table->bigInteger('card_num', 150)->nullable();
-            $table->tinyInteger('csv', false, true)->nullable();
-            $table->timestamp('card_exp_date', 150)->nullable();
-            $table->string('card_name', 50)->nullable();
+            $table->text('card_num')->nullable();
+            $table->text('card_exp_date')->nullable();
+            $table->text('card_name')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
