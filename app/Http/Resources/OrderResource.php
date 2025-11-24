@@ -16,6 +16,7 @@ class OrderResource extends JsonResource
             'id'                    => $this->id,
             'total_amount'          => $this->total_amount,
             'user_name'             => $this->user?->name,
+            'state'                 => $this->state->label(),
             'items'                 => ItemResource::collection($this->whenLoaded('items')),
             'created_at'            => Carbon::parse($this->created_at)->diffForHumans(),
             'updated_at'            => $this->updated_at,
