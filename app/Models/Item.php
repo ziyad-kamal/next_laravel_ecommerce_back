@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\ItemApproval;
+use App\Enums\{ItemApproval};
 use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
@@ -52,7 +52,7 @@ class Item extends Model
     protected function casts(): array
     {
         return [
-            'approval' => ItemApproval::class,
+            'approval'  => ItemApproval::class,
         ];
     }
 }

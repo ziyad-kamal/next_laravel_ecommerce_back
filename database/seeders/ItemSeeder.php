@@ -24,15 +24,15 @@ class ItemSeeder extends Seeder
             $name      = $faker->name();
 
             $itemId = Item::insertGetId([
-                'name'               => $name,
-                'slug'               => Str::slug($name.'-'.$i),
-                'approve'            => $faker->randomElement(['approved', 'pending', 'refused']),
-                'trans_lang'         => 'en',
-                'admin_id'           => $adminIds->random(),
-                'category_id'        => $categoryIds->random(),
-                'brand_id'           => $brandIds->random(),
-                'created_at'         => $date,
-                'updated_at'         => $date,
+                'name'                => $name,
+                'slug'                => Str::slug($name.'-'.$i),
+                'approval'            => $faker->numberBetween(1, 3),
+                'trans_lang'          => 'en',
+                'admin_id'            => $adminIds->random(),
+                'category_id'         => $categoryIds->random(),
+                'brand_id'            => $brandIds->random(),
+                'created_at'          => $date,
+                'updated_at'          => $date,
             ]);
 
             Item::find($itemId)->update(['trans_of' => $itemId]);

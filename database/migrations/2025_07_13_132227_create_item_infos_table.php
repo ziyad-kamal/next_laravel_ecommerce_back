@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('item_infos', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->enum('condition', ['new', 'used']);
+            $table->tinyInteger('condition', false, true);
             $table->mediumInteger('price');
             $table->string('trans_lang', 5);
             $table->foreignId('trans_of')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();

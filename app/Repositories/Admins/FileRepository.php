@@ -35,7 +35,7 @@ class FileRepository implements FileRepositoryInterface
             $images_arr = [];
             if ($images != []) {
                 foreach ($images as $image) {
-                    $path = $image;
+                    $path = $image['path'];
 
                     $images_arr[] = [
                         'path'       => $path,

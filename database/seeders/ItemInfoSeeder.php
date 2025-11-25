@@ -21,7 +21,7 @@ class ItemInfoSeeder extends Seeder
 
             $itemInfoId = Item_info::insertGetId([
                 'description'            => $faker->sentence(),
-                'condition'              => $faker->randomElement(['new', 'used']),
+                'condition'              => $faker->numberBetween(1, 2),
                 'price'                  => $faker->numberBetween(100, 5000),
                 'trans_lang'             => 'en',
                 'item_id'                => $itemId,

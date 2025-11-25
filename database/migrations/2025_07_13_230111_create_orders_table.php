@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->mediumInteger('total_amount', false, true);
+            $table->tinyInteger('quantity', false, true);
             $table->mediumInteger('state', false, true);
             $table->string('bank_trans_id', 80)->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();

@@ -11,7 +11,7 @@ trait GetDataByLang
     public function getDataByDefaultLang(array $data, FormRequest $request): array
     {
         $authId         = $request->user()->id;
-        $defaultLang    = Cache::get("defaultLang{$authId}");
+        $defaultLang    = Cache::get("defaultLang{$authId}", 'en');
         $collected_data = collect($data);
 
         $filter         = $collected_data->filter(function ($val) use ($defaultLang) {
@@ -24,7 +24,7 @@ trait GetDataByLang
     public function getDataByOtherLangs(array $data, FormRequest $request): Collection
     {
         $authId         = $request->user()->id;
-        $defaultLang    = Cache::get("defaultLang{$authId}");
+        $defaultLang    = Cache::get("defaultLang{$authId}", 'en');
         $collected_data = collect($data);
 
         return $collected_data->filter(function ($val) use ($defaultLang) {
