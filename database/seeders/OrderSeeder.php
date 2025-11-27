@@ -18,12 +18,14 @@ class OrderSeeder extends Seeder
         $usersIds    = collect(User::pluck('id')->toArray());
 
         foreach ($itemsId as $itemId) {
-            $date  = $faker->dateTimeBetween('-5 years');
+            $date     = $faker->dateTimeBetween('-5 years');
+            $price    = Item::find($itemId)->price;
+            $quantity = $faker->numberBetween(1, 3);
 
             $order = Order::create([
                 'bank_trans_id' => $faker->numberBetween(5000000, 6000000),
-                'total_amount'  => $faker->numberBetween(500, 6000),
-                'quantity'      => $faker->numberBetween(1, 3),
+                'total_amount'  => $price * $quantity,
+                'quantity'      => $quantity,
                 'state'         => $faker->numberBetween(1, 5),
                 'user_id'       => $usersIds->random(),
                 'created_at'    => $date,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Interfaces\Admins\OrderRepositoryInterface;
 use App\Models\Order;
@@ -31,11 +32,19 @@ class OrderController extends Controller
     }
 
     // MARK: show
-    public function show(Order $order): AnonymousResourceCollection
+    public function show(Order $order): OrderResource
     {
-        $allOrders = $this->orderRepository->show($order);
+        $orderData = $this->orderRepository->show($order);
 
-        return OrderResource::collection($allOrders);
+        return new OrderResource($orderData);
+    }
+
+    // MARK: update
+    public function update(OrderRequest $request, Order $order): JsonResponse
+    {
+        $this->orderRepository->update($order, $request);
+
+        return $this->returnSuccess('you updated state of order successfully');
     }
 
     // MARK: destroy

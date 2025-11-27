@@ -20,7 +20,7 @@ trait UploadImage
 
         $path = 'images/'.$path.'/'.$name;
 
-        Storage::put($path, $encodedImage);
+        Storage::disk('public')->put($path, $encodedImage);
 
         return asset('/storage/'.$path);
     }
@@ -29,7 +29,7 @@ trait UploadImage
     public function dropZoneUpload(FormRequest $request, string $path): array
     {
         $path           = $this->uploadImage($request, $path, 100);
-        $originalName  = $request->file('image')->getClientOriginalName();
+        $originalName   = $request->file('image')->getClientOriginalName();
 
         return ['path' => $path, 'originalName' => $originalName];
     }

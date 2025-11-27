@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Admins;
 
+use App\Http\Requests\OrderRequest;
 use App\Interfaces\Admins\{OrderRepositoryInterface};
 use App\Models\{Order};
 use Illuminate\Contracts\Pagination\Paginator;
@@ -25,9 +26,14 @@ class OrderRepository implements OrderRepositoryInterface
     {
         return Order::query()
             ->where('id', $order->id)
-            ->with(['user', 'items'])
-            ->get();
+            ->with(['user', 'items', 'items.item_files'])
+            ->first();
+    }
 
+    // MARK: update
+    public function update(Order $order, OrderRequest $request): void
+    {
+        $order->update(['state' => $request->state]);
     }
 
     // MARK: delete

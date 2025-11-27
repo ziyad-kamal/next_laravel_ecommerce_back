@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderState;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrderRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'items_id' => 'required|array|min:1',
+            'state' => ['required', Rule::enum(OrderState::class)],
         ];
     }
 }
