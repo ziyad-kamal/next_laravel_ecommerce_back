@@ -26,7 +26,7 @@ class OrderController extends Controller
     // MARK: index
     public function index(Request $request): AnonymousResourceCollection
     {
-        $orders = $this->orderRepository->index($request);
+        $orders = $this->orderRepository->orderIndex($request);
 
         return orderResource::collection($orders);
     }
@@ -34,7 +34,7 @@ class OrderController extends Controller
     // MARK: show
     public function show(Order $order): OrderResource
     {
-        $orderData = $this->orderRepository->show($order);
+        $orderData = $this->orderRepository->orderShow($order);
 
         return new OrderResource($orderData);
     }
@@ -42,15 +42,31 @@ class OrderController extends Controller
     // MARK: update
     public function update(OrderRequest $request, Order $order): JsonResponse
     {
-        $this->orderRepository->update($order, $request);
+        $this->orderRepository->orderUpdate($order, $request);
 
         return $this->returnSuccess('you updated state of order successfully');
+    }
+
+    // MARK: delivery
+    public function delivery(Order $order): JsonResponse
+    {
+        $this->orderRepository->orderDelivery($order);
+
+        return $this->returnSuccess('you delivered the order successfully');
+    }
+
+    // MARK: refund
+    public function refund(Order $order): JsonResponse
+    {
+        $this->orderRepository->orderRefund($order);
+
+        return $this->returnSuccess('you refund the order successfully');
     }
 
     // MARK: destroy
     public function destroy(Order $order): JsonResponse
     {
-        $this->orderRepository->delete($order);
+        $this->orderRepository->orderDelete($order);
 
         return $this->returnSuccess('you successfully deleted order');
     }

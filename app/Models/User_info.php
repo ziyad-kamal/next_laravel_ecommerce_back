@@ -9,4 +9,11 @@ class User_info extends Model
 {
     /** @use HasFactory<\Database\Factories\UserInfoFactory> */
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'card_num'  => 'encrypted',
+        ];
+    }
 }

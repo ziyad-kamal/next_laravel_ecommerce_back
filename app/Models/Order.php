@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\OrderState;
+use App\Enums\{OrderMethod, OrderState};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,7 +27,8 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'state' => OrderState::class,
+            'state'  => OrderState::class,
+            'method' => OrderMethod::class,
         ];
     }
 }

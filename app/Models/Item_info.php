@@ -16,7 +16,7 @@ class Item_info extends Model
     protected function casts(): array
     {
         return [
-            'condition' => ItemCondition::class,
+            'condition'           => ItemCondition::class,
         ];
     }
 }

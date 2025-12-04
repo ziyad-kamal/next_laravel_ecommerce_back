@@ -8,11 +8,15 @@ use Illuminate\Contracts\Pagination\Paginator;
 
 interface OrderRepositoryInterface
 {
-    public function index(): Paginator;
+    public function orderIndex(): Paginator;
 
-    public function show(Order $order): mixed;
+    public function orderShow(Order $order): mixed;
 
-    public function update(Order $order, OrderRequest $request): void;
+    public function orderUpdate(Order $order, OrderRequest $request): void;
 
-    public function delete(Order $order): void;
+    public function orderDelivery(Order $order): void;
+
+    public function orderRefund(Order $order): void;
+
+    public function orderDelete(Order $order): void;
 }

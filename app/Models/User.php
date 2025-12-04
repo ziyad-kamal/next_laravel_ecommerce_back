@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $query->select('name', 'email', 'id', 'created_at');
     }
+
+    public function user_infos()
+    {
+        return $this->hasOne(User_info::class);
+    }
 }

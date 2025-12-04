@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->mediumInteger('total_amount', false, true);
             $table->tinyInteger('quantity', false, true);
+            $table->tinyInteger('method', false, true);
             $table->mediumInteger('state', false, true);
-            $table->string('bank_trans_id', 80)->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

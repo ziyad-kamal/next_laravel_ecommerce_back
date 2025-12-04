@@ -18,7 +18,12 @@ Route::apiResource('/user', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('/brand', BrandController::class)->middleware('auth:sanctum');
 Route::apiResource('/category', CategoryController::class)->middleware('auth:sanctum');
 Route::apiResource('/item', ItemController::class)->middleware('auth:sanctum');
+
 Route::apiResource('/order', OrderController::class)->middleware('auth:sanctum');
+Route::controller(OrderController::class)->middleware('auth:sanctum')->group(function () {
+    Route::put('/order/delivery/{order}', 'delivery');
+    Route::put('/order/refund/{order}', 'refund');
+});
 
 Route::controller(FileController::class)->middleware('auth:sanctum')->group(function () {
     Route::post('/file/upload', 'upload');
