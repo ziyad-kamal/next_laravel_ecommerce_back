@@ -23,14 +23,15 @@ class OrderSeeder extends Seeder
             $quantity = $faker->numberBetween(1, 3);
 
             $order = Order::create([
-                'bank_trans_id'  => $faker->numberBetween(5000000, 6000000),
-                'total_amount'   => $price * $quantity,
-                'quantity'       => $quantity,
-                'state'          => $faker->numberBetween(1, 5),
-                'method'         => $faker->numberBetween(1, 2),
-                'user_id'        => $usersIds->random(),
-                'created_at'     => $date,
-                'updated_at'     => $date,
+                'bank_trans_id'        => $faker->numberBetween(5000000, 6000000),
+                'total_amount'         => $price * $quantity,
+                'quantity'             => $quantity,
+                'state'                => $faker->numberBetween(1, 5),
+                'method'               => $faker->numberBetween(1, 2),
+                'user_id'              => $usersIds->random(),
+                'date_of_delivery'     => $date->clone()->addDays(3),
+                'created_at'           => $date,
+                'updated_at'           => $date,
             ]);
 
             $items = Item::inRandomOrder()->take(3)->pluck('id')->toArray();

@@ -11,13 +11,33 @@ use Illuminate\Contracts\Pagination\Paginator;
 class OrderRepository implements OrderRepositoryInterface
 {
     // MARK: index
-    public function orderIndex(): Paginator
+    public function orderIndex(OrderRequest $request): Paginator
     {
-        $keyToSort   = $request->keyToSort   ?? 'created_at';
-        $direction   = $request->direction   ?? 'desc';
+        $keyToSort   = $request->keyToSort ? $request->keyToSort : 'created_at';
+        $direction   = $request->direction ? $request->direction : 'desc';
 
-        return Order::query()
-            ->with(['user'])
+        $orders = Order::with('user');
+
+        $dateOfDelivery = $request->date_of_delivery;
+        if ($dateOfDelivery) {
+            $orders = $orders->whereDate('date_of_delivery', $dateOfDelivery);
+        }
+
+        $userName = $request->user_name;
+        if ($userName) {
+            if ($userName) {
+                $orders = $orders->whereHas('user', function ($query) use ($userName) {
+                    $query->where('name', 'LIKE', "{$userName}%");
+                });
+            }
+        }
+
+        $state = $request->state;
+        if ($state) {
+            $orders = $orders->where('state', $state);
+        }
+
+        return $orders
             ->orderBy($keyToSort, $direction)
             ->paginate(10);
     }

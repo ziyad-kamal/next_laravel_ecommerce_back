@@ -27,8 +27,9 @@ class Order extends Model
     protected function casts(): array
     {
         return [
-            'state'  => OrderState::class,
-            'method' => OrderMethod::class,
+            'state'            => OrderState::class,
+            'method'           => OrderMethod::class,
+
         ];
     }
 }

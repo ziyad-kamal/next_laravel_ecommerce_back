@@ -23,8 +23,13 @@ class OrderRequest extends FormRequest
      */
     public function rules(): array
     {
+        $method         = $this->_method;
+        $state_required = $method ? 'required' : 'nullable';
+
         return [
-            'state' => ['required', Rule::enum(OrderState::class)],
+            'state'                => [$state_required, Rule::enum(OrderState::class)],
+            'user_name'            => ['nullable', 'string'],
+            'date_of_delivery'     => ['nullable', 'date'],
         ];
     }
 }

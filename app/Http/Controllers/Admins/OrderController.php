@@ -8,7 +8,7 @@ use App\Http\Resources\OrderResource;
 use App\Interfaces\Admins\OrderRepositoryInterface;
 use App\Models\Order;
 use App\Traits\{CanAccessAdminPanel, Response};
-use Illuminate\Http\{JsonResponse, Request};
+use Illuminate\Http\{JsonResponse};
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class OrderController extends Controller
@@ -24,7 +24,7 @@ class OrderController extends Controller
      * Display a listing of the resource.
      */
     // MARK: index
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(OrderRequest $request): AnonymousResourceCollection
     {
         $orders = $this->orderRepository->orderIndex($request);
 

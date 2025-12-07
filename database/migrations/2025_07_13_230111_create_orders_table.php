@@ -18,6 +18,7 @@ return new class extends Migration
             $table->tinyInteger('method', false, true);
             $table->mediumInteger('state', false, true);
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamp('date_of_delivery');
             $table->timestamps();
         });
     }

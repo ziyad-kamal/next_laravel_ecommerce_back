@@ -13,15 +13,16 @@ class OrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'                                   => $this->id,
-            'total_amount'                         => $this->total_amount,
-            'user'                                 => $this->user,
-            'state'                                => $this->state->label(),
-            'quantity'                             => $this->quantity,
-            'method'                               => $this->method->label(),
-            'items'                                => ItemResource::collection($this->whenLoaded('items')),
-            'created_at'                           => Carbon::parse($this->created_at)->diffForHumans(),
-            'updated_at'                           => $this->updated_at,
+            'id'                              => $this->id,
+            'total_amount'                    => $this->total_amount,
+            'user'                            => $this->user,
+            'date_of_delivery'                => $this->date_of_delivery,
+            'state'                           => $this->state->label(),
+            'quantity'                        => $this->quantity,
+            'method'                          => $this->method->label(),
+            'items'                           => ItemResource::collection($this->whenLoaded('items')),
+            'created_at'                      => Carbon::parse($this->created_at)->diffForHumans(),
+            'updated_at'                      => $this->updated_at,
         ];
     }
 

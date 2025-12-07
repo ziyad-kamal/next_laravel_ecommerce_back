@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 
 interface OrderRepositoryInterface
 {
-    public function orderIndex(): Paginator;
+    public function orderIndex(OrderRequest $request): Paginator;
 
     public function orderShow(Order $order): mixed;
 

@@ -19,8 +19,9 @@ Route::apiResource('/brand', BrandController::class)->middleware('auth:sanctum')
 Route::apiResource('/category', CategoryController::class)->middleware('auth:sanctum');
 Route::apiResource('/item', ItemController::class)->middleware('auth:sanctum');
 
-Route::apiResource('/order', OrderController::class)->middleware('auth:sanctum');
+Route::apiResource('/order', OrderController::class)->middleware('auth:sanctum')->except('index');
 Route::controller(OrderController::class)->middleware('auth:sanctum')->group(function () {
+    Route::any('/order/index', 'index');
     Route::put('/order/delivery/{order}', 'delivery');
     Route::put('/order/refund/{order}', 'refund');
 });

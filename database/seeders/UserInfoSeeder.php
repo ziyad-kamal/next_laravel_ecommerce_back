@@ -21,6 +21,8 @@ class UserInfoSeeder extends Seeder
 
             User_info::insert([
                 'address'             => $faker->address(),
+                'city'                => $faker->city(),
+                'country'             => $faker->country(),
                 'phone'               => $faker->numberBetween(1000000, 6000000), // 10-digit numeric phone number
                 'card_num'            => encrypt($faker->creditCardNumber()),
                 'card_type'           => $faker->creditCardType(),
