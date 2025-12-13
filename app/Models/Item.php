@@ -19,11 +19,6 @@ class Item extends Model
         return $this->belongsTo(Admin::class);
     }
 
-    public function vendor(): BelongsTo
-    {
-        return $this->belongsTo(Vendor::class);
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

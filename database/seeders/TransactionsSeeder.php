@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Item, Order, Transactions};
+use App\Models\{Item, Order, Transaction};
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -20,7 +20,7 @@ class TransactionsSeeder extends Seeder
         foreach ($itemsId as $itemId) {
             $date     = $faker->dateTimeBetween('-5 years');
 
-            Transactions::create([
+            Transaction::create([
                 'bank_trans_id'   => $faker->numberBetween(5000000, 6000000),
                 'type'            => $faker->numberBetween(1, 2),
                 'order_id'        => $ordersIds->random(),

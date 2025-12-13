@@ -24,12 +24,16 @@ class Order extends Model
         return $this->belongsToMany(Item::class, 'order_item');
     }
 
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
+
     protected function casts(): array
     {
         return [
             'state'            => OrderState::class,
             'method'           => OrderMethod::class,
-
         ];
     }
 }

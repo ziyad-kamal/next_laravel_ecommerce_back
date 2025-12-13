@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admins\{AdminController, AuthController, BrandController, CategoryController, FileController, ItemController, LangController, OrderController, SearchController, UserController};
+use App\Http\Controllers\Admins\{AdminController, AuthController, BrandController, CategoryController, DashboardController, FileController, ItemController, LangController, OrderController, SearchController, UserController};
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -35,7 +35,8 @@ Route::controller(FileController::class)->middleware('auth:sanctum')->group(func
 Route::controller(SearchController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/search/categories', 'categories');
     Route::get('/search/brands', 'brands');
-
 });
 
 Route::post('/lang', [LangController::class, 'store'])->middleware('auth:sanctum');
+
+Route::any('/dashboard/index', [DashboardController::class, 'index'])->middleware('auth:sanctum');

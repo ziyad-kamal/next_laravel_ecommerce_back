@@ -5,7 +5,7 @@ namespace App\Repositories\Admins;
 use App\Enums\{OrderState, TransactionType};
 use App\Http\Requests\OrderRequest;
 use App\Interfaces\Admins\{OrderRepositoryInterface};
-use App\Models\{Order, Transactions};
+use App\Models\{Order, Transaction};
 use Illuminate\Contracts\Pagination\Paginator;
 
 class OrderRepository implements OrderRepositoryInterface
@@ -62,7 +62,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $order->update(['state' => OrderState::Delivered]);
 
-        Transactions::create([
+        Transaction::create([
             'bank_trans_id'       => null,
             'order_id'            => $order->id,
             'type'                => TransactionType::Buy,
@@ -74,7 +74,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $order->update(['state' => OrderState::Refunded]);
 
-        Transactions::where('order_id', $order->id)->update(['type'  => TransactionType::Refund]);
+        Transaction::where('order_id', $order->id)->update(['type'  => TransactionType::Refund]);
     }
 
     // MARK: delete
