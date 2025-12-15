@@ -6,13 +6,14 @@ use App\Enums\TransactionType;
 use App\Interfaces\Admins\{DashboardRepositoryInterface};
 use App\Models\{Item, Order, User};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardRepository implements DashboardRepositoryInterface
 {
     // MARK: index
     public function dashboardIndex(Request $request): array
     {
-        $days               = $request->days;
+        $date               = now()->subDays($request->days);
         $totalRevenue       = Order::query()
             ->with('transaction')
             ->whereHas('transaction', function ($query) {
@@ -20,36 +21,77 @@ class DashboardRepository implements DashboardRepositoryInterface
             })
             ->sum('total_amount');
 
-        $totalRevenueBefore       = Order::query()
+        $RevenueChange      = Order::query()
             ->with('transaction')
-            ->whereHas('transaction', function ($query) use ($days) {
-                $query->where('type', TransactionType::Buy)->where('transactions.created_at', '<', now()->subDays($days));
+            ->whereHas('transaction', function ($query) use ($date) {
+                $query->where('type', TransactionType::Buy)->where('transactions.created_at', '>=', $date);
             })
             ->sum('total_amount');
 
-        $totalRevenueChange = $totalRevenue - $totalRevenueBefore;
+        $revenueChangePercent = 0;
+        if ($totalRevenue != 0) {
+            $revenueChangePercent = round($RevenueChange / $totalRevenue * 100, 2);
+        }
 
-        $ordersCount              = Order::count();
-        $ordersCountBefore        = Order::where('created_at', now()->subDays($days))->count();
-        $totalOrdersChange        = $ordersCount - $ordersCountBefore;
+        $ordersStats = Order::selectRaw('
+                COUNT(*) as total_count,
+                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as ordersCountChange
+            ', [$date])
+            ->first();
 
-        $usersCount               = User::count();
-        $usersCountBefore         = User::where('created_at', now()->subDays($days))->count();
-        $totalUsersChange         = $usersCount - $usersCountBefore;
+        $ordersChangePercent      = 0;
+        $totalOrdersCount         = $ordersStats->total_count;
+        if ($totalOrdersCount != 0) {
+            $ordersChangePercent = round($ordersStats->ordersCountChange / $totalOrdersCount * 100, 2);
+        }
 
-        $itemsCount               = Item::count();
-        $itemsCountBefore         = Item::where('created_at', now()->subDays($days))->count();
-        $totalItemsChange         = $itemsCount - $itemsCountBefore;
+        $usersStats = User::selectRaw('
+                COUNT(*) as total_count,
+                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as usersCountChange
+            ', [$date])
+            ->first();
+
+        $usersChangePercent      = 0;
+        $totalUsersCount         = $usersStats->total_count;
+        if ($totalUsersCount != 0) {
+            $usersChangePercent = round($usersStats->usersCountChange / $totalUsersCount * 100, 2);
+        }
+
+        $itemsStats = Item::selectRaw('
+                COUNT(*) as total_count,
+                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as itemsCountChange
+            ', [$date])
+            ->first();
+
+        $itemsChangePercent      = 0;
+        $totalItemsCount         = $itemsStats->total_count;
+        if ($totalItemsCount != 0) {
+            $itemsChangePercent = round($usersStats->itemsCountChange / $totalItemsCount * 100, 2);
+        }
+        $months      = $request->months;
+        $revenueData = Order::selectRaw("
+                DATE_FORMAT(created_at, '%b') as name,
+                YEAR(created_at) as year,
+                MONTH(created_at) as month,
+                SUM(total_amount) as revenue,
+                COUNT(*) as orders
+            ")
+            ->where('created_at', '>=', now()->subMonths($months))
+            ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')"))
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
 
         return [
             'total_revenue'                       => $totalRevenue,
-            'total_revenue_change'                => $totalRevenueChange,
-            'orders_count'                        => $ordersCount,
-            'orders_count_change'                 => $totalOrdersChange,
-            'user_count'                          => $usersCount,
-            'user_count_change'                   => $totalUsersChange,
-            'items_count'                         => $itemsCount,
-            'items_count_change'                  => $totalItemsChange,
+            'total_revenue_change_percent'        => $revenueChangePercent,
+            'orders_count'                        => $totalOrdersCount,
+            'orders_count_change'                 => $ordersChangePercent,
+            'user_count'                          => $totalUsersCount,
+            'user_count_change'                   => $usersChangePercent,
+            'items_count'                         => $totalItemsCount,
+            'items_count_change'                  => $itemsChangePercent,
+            'revenue_data'                        => $revenueData,
         ];
     }
 }
