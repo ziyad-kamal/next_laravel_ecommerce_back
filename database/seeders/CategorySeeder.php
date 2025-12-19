@@ -17,11 +17,11 @@ class CategorySeeder extends Seeder
         $category  = collect(['electronics', 'clothes', 'accessories']);
         $admins    = collect(Admin::pluck('id')->toArray());
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < $category->count(); $i++) {
             $date      = $faker->dateTimeBetween('-5 years');
 
             $category_id = Category::insertGetId([
-                'name'                   => $category->random(),
+                'name'                   => $category->unique()[$i],
                 'image'                  => 'image',
                 'trans_lang'             => 'en',
                 'admin_id'               => $admins->random(),

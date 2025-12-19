@@ -17,7 +17,7 @@ return new class extends Migration
             $table->tinyInteger('condition', false, true);
             $table->mediumInteger('price');
             $table->string('trans_lang', 5);
-            $table->foreignId('trans_of')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('trans_of')->nullable()->constrained('item_infos')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('item_id')->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

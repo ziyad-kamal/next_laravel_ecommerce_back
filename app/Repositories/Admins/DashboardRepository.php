@@ -82,6 +82,22 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->orderBy('month')
             ->get();
 
+        $categoryData = DB::table('categories')
+            ->join('items', 'categories.id', '=', 'items.category_id')
+            ->join('item_infos', 'items.id', '=', 'item_infos.item_id')
+            ->join('order_item', 'items.id', '=', 'order_item.item_id')
+            ->join('orders', 'order_item.order_id', '=', 'orders.id')
+            ->join('transactions', 'orders.id', '=', 'transactions.order_id')
+            ->select(
+                'categories.name',
+                DB::raw('SUM(item_infos.price) as value')
+            )
+            ->where('transactions.type', TransactionType::Buy)
+            ->groupBy('categories.name')
+            ->orderByDesc('value')
+            ->limit(5)
+            ->get();
+
         return [
             'total_revenue'                       => $totalRevenue,
             'total_revenue_change_percent'        => $revenueChangePercent,

@@ -18,6 +18,11 @@ class Category extends Model
         return $this->belongsTo(Admin::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+
     public function scopeSelection(Builder $query): Builder
     {
         return $query->select('name', 'image', 'id', 'created_at', 'admin_id', 'trans_lang');

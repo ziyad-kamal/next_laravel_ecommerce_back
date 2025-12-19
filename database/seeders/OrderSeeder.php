@@ -29,7 +29,7 @@ class OrderSeeder extends Seeder
                 'state'                => $faker->numberBetween(1, 5),
                 'method'               => $faker->numberBetween(1, 2),
                 'user_id'              => $usersIds->random(),
-                'date_of_delivery'     => $date->clone()->addDays(3),
+                'date_of_delivery'     => (clone $date)->modify('+3 days'),
                 'created_at'           => $date,
                 'updated_at'           => $date,
             ]);
