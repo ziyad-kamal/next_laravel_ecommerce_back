@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Admins;
 
-use App\Enums\TransactionType;
+use App\Enums\{OrderState, TransactionType};
 use App\Interfaces\Admins\{DashboardRepositoryInterface};
 use App\Models\{Item, Order, User};
 use Illuminate\Http\Request;
@@ -68,12 +68,13 @@ class DashboardRepository implements DashboardRepositoryInterface
         if ($totalItemsCount != 0) {
             $itemsChangePercent = round($usersStats->itemsCountChange / $totalItemsCount * 100, 2);
         }
+
         $months      = $request->months;
-        $revenueData = Order::selectRaw("
+        $salesData   = Order::selectRaw("
                 DATE_FORMAT(created_at, '%b') as name,
                 YEAR(created_at) as year,
                 MONTH(created_at) as month,
-                SUM(total_amount) as revenue,
+                SUM(total_amount) as sales,
                 COUNT(*) as orders
             ")
             ->where('created_at', '>=', now()->subMonths($months))
@@ -87,12 +88,11 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->join('item_infos', 'items.id', '=', 'item_infos.item_id')
             ->join('order_item', 'items.id', '=', 'order_item.item_id')
             ->join('orders', 'order_item.order_id', '=', 'orders.id')
-            ->join('transactions', 'orders.id', '=', 'transactions.order_id')
             ->select(
                 'categories.name',
                 DB::raw('SUM(item_infos.price) as value')
             )
-            ->where('transactions.type', TransactionType::Buy)
+            ->where('orders.state', OrderState::Delivered)
             ->groupBy('categories.name')
             ->orderByDesc('value')
             ->limit(5)
@@ -107,7 +107,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             'user_count_change'                   => $usersChangePercent,
             'items_count'                         => $totalItemsCount,
             'items_count_change'                  => $itemsChangePercent,
-            'revenue_data'                        => $revenueData,
+            'revenue_data'                        => $salesData,
         ];
     }
 }
