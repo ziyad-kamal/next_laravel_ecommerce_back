@@ -2,11 +2,15 @@
 
 namespace App\Repositories\Users;
 
+use App\Enums\VisitConversion;
 use App\Http\Requests\{LoginRequest, UserRequest};
 use App\Interfaces\Users\AuthRepositoryInterface;
-use App\Models\User;
+use App\Models\{User, Visit};
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Hash};
+
+use function Symfony\Component\Clock\now;
 
 class AuthRepository implements AuthRepositoryInterface
 {
@@ -16,8 +20,16 @@ class AuthRepository implements AuthRepositoryInterface
         $data = $request->safe()->except('password') + ['password' => $request->password];
         $user = User::create($data);
 
-        $tokenExpire = $request->isNotFilled('rememberMe') ? now()->addHours(4) : null;
+        $tokenExpire = $request->isNotFilled('rememberMe') ? Carbon::now()->addHours(4) : null;
         $token       = $user->createToken($request->email, ['*'], $tokenExpire);
+
+        $visit = Visit::query()
+            ->where(['ip' => $request->ip(), 'created_at' => now(), 'converted' => VisitConversion::NotSignedUp])
+            ->first();
+
+        if ($visit) {
+            $visit->update(['converted' => VisitConversion::SignedUp]);
+        }
 
         return ['token' => $token->plainTextToken, 'user' => $user];
     }

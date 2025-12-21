@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Item, Order, User};
+use App\Models\{Item, Item_info, Order, User};
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +19,7 @@ class OrderSeeder extends Seeder
 
         foreach ($itemsId as $itemId) {
             $date     = $faker->dateTimeBetween('-5 years');
-            $price    = Item::find($itemId)->price;
+            $price    = Item_info::where('item_id', $itemId)->value('price');
             $quantity = $faker->numberBetween(1, 3);
 
             $order = Order::create([

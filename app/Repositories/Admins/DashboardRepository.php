@@ -14,23 +14,23 @@ class DashboardRepository implements DashboardRepositoryInterface
     public function dashboardIndex(Request $request): array
     {
         $date               = now()->subDays($request->days);
-        $totalRevenue       = Order::query()
+        $totalSales         = Order::query()
             ->with('transaction')
             ->whereHas('transaction', function ($query) {
                 $query->where('type', TransactionType::Buy);
             })
             ->sum('total_amount');
 
-        $RevenueChange      = Order::query()
+        $salesChange      = Order::query()
             ->with('transaction')
             ->whereHas('transaction', function ($query) use ($date) {
                 $query->where('type', TransactionType::Buy)->where('transactions.created_at', '>=', $date);
             })
             ->sum('total_amount');
 
-        $revenueChangePercent = 0;
-        if ($totalRevenue != 0) {
-            $revenueChangePercent = round($RevenueChange / $totalRevenue * 100, 2);
+        $salesChangePercent = 0;
+        if ($totalSales != 0) {
+            $salesChangePercent = round($salesChange / $totalSales * 100, 2);
         }
 
         $ordersStats = Order::selectRaw('
@@ -66,7 +66,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         $itemsChangePercent      = 0;
         $totalItemsCount         = $itemsStats->total_count;
         if ($totalItemsCount != 0) {
-            $itemsChangePercent = round($usersStats->itemsCountChange / $totalItemsCount * 100, 2);
+            $itemsChangePercent = round($itemsStats->itemsCountChange / $totalItemsCount * 100, 2);
         }
 
         $months      = $request->months;
@@ -78,6 +78,7 @@ class DashboardRepository implements DashboardRepositoryInterface
                 COUNT(*) as orders
             ")
             ->where('created_at', '>=', now()->subMonths($months))
+            ->where('state', OrderState::Delivered)
             ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')"))
             ->orderBy('year')
             ->orderBy('month')
@@ -98,16 +99,41 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->limit(5)
             ->get();
 
+        $trafficData = DB::table('visits')
+            ->selectRaw('DAYNAME(created_at) as day')
+            ->selectRaw('COUNT(*) as visits')
+            ->selectRaw('SUM(CASE WHEN converted = 1 THEN 1 ELSE 0 END) as conversions')
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->groupBy(DB::raw('DAYOFWEEK(created_at)'), 'day')
+            ->orderBy(DB::raw('DAYOFWEEK(created_at)'))
+            ->get();
+
         return [
-            'total_revenue'                       => $totalRevenue,
-            'total_revenue_change_percent'        => $revenueChangePercent,
-            'orders_count'                        => $totalOrdersCount,
-            'orders_count_change'                 => $ordersChangePercent,
-            'user_count'                          => $totalUsersCount,
-            'user_count_change'                   => $usersChangePercent,
-            'items_count'                         => $totalItemsCount,
-            'items_count_change'                  => $itemsChangePercent,
-            'revenue_data'                        => $salesData,
+            'stats' => [
+                [
+                    'title'                      => 'Total sales',
+                    'value'                      => $totalSales,
+                    'change'                     => $salesChangePercent,
+                ],
+                [
+                    'title'        => 'Orders',
+                    'value'        => $totalOrdersCount,
+                    'change'       => $ordersChangePercent,
+                ],
+                [
+                    'title'        => 'users',
+                    'value'        => $totalUsersCount,
+                    'change'       => $usersChangePercent,
+                ],
+                [
+                    'title'        => 'items',
+                    'value'        => $totalItemsCount,
+                    'change'       => $itemsChangePercent,
+                ],
+            ],
+            'sales_data'    => $salesData,
+            'category_data' => $categoryData,
+            'traffic_data'  => $trafficData,
         ];
     }
 }

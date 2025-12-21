@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Visit;
 use Closure;
 use Illuminate\Http\Request;
 
-class PreventXss
+class StoreVisit
 {
     /**
      * Handle an incoming request.
@@ -15,17 +16,17 @@ class PreventXss
      */
     public function handle(Request $request, Closure $next)
     {
-        $inputs = $request->input();
+        $ip    = $request->ip();
+        $visit = Visit::query()
+            ->where('ip', $ip)
+            ->whereBetween('created_at', [
+                now()->startOfDay(),
+                now()->endOfDay(),
+            ])
+            ->first();
 
-        if ($inputs != []) {
-            array_walk_recursive(
-                $inputs,
-                function (&$input) {
-                    $input = strip_tags($input);
-                }
-            );
-
-            $request->merge($inputs);
+        if (! $visit) {
+            Visit::create(['ip' => $ip]);
         }
 
         return $next($request);

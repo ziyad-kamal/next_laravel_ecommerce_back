@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\PreventXss;
+use App\Http\Middleware\{PreventXss, StoreVisit};
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\{Exceptions, Middleware};
 use Illuminate\Support\Facades\Route;
@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->append(PreventXss::class);
+        $middleware->append([PreventXss::class, StoreVisit::class]);
         $middleware->alias([
             'abilities' => CheckAbilities::class,
         ]);
