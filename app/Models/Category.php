@@ -27,4 +27,8 @@ class Category extends Model
     {
         return $query->select('name', 'image', 'id', 'created_at', 'admin_id', 'trans_lang');
     }
+
+    protected $casts = [
+        'value' => 'float',
+    ];
 }

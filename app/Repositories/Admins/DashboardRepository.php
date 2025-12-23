@@ -4,7 +4,7 @@ namespace App\Repositories\Admins;
 
 use App\Enums\{OrderState, TransactionType};
 use App\Interfaces\Admins\{DashboardRepositoryInterface};
-use App\Models\{Item, Order, User};
+use App\Models\{Category, Item, Order, User};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -84,7 +84,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->orderBy('month')
             ->get();
 
-        $categoryData = DB::table('categories')
+        $categoryData = Category::query()
             ->join('items', 'categories.id', '=', 'items.category_id')
             ->join('item_infos', 'items.id', '=', 'item_infos.item_id')
             ->join('order_item', 'items.id', '=', 'order_item.item_id')
