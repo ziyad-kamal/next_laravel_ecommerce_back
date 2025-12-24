@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Admins;
 
-use App\Enums\{OrderState, TransactionType};
+use App\Enums\{OrderState};
 use App\Interfaces\Admins\{DashboardRepositoryInterface};
 use App\Models\{Category, Item, Order, User};
 use Illuminate\Http\Request;
@@ -13,63 +13,54 @@ class DashboardRepository implements DashboardRepositoryInterface
     // MARK: index
     public function dashboardIndex(Request $request): array
     {
-        $date               = now()->subDays($request->days);
+        $currentPeriodStart   = now()->subMonths($request->months);
+        $previousPeriodStart  = now()->subMonths($request->months * 2);
+
+        // Total Sales
         $totalSales         = Order::query()
             ->with('transaction')
-            ->whereHas('transaction', function ($query) {
-                $query->where('type', TransactionType::Buy);
-            })
+            ->whereHas('transaction')
             ->sum('total_amount');
 
-        $salesChange      = Order::query()
+        $currentSales         = Order::query()
             ->with('transaction')
-            ->whereHas('transaction', function ($query) use ($date) {
-                $query->where('type', TransactionType::Buy)->where('transactions.created_at', '>=', $date);
+            ->whereHas('transaction', function ($query) use ($currentPeriodStart) {
+                $query->where('created_at', '>=', $currentPeriodStart);
             })
             ->sum('total_amount');
 
-        $salesChangePercent = 0;
-        if ($totalSales != 0) {
-            $salesChangePercent = round($salesChange / $totalSales * 100, 2);
-        }
+        $previousSales = Order::query()
+            ->with('transaction')
+            ->whereHas('transaction', function ($query) use ($currentPeriodStart, $previousPeriodStart) {
+                $query->whereBetween('created_at', [$previousPeriodStart, $currentPeriodStart]);
+            })
+            ->sum('total_amount');
 
-        $ordersStats = Order::selectRaw('
-                COUNT(*) as total_count,
-                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as ordersCountChange
-            ', [$date])
-            ->first();
+        $salesChange = $previousSales > 0
+            ? (($currentSales - $previousSales) / $previousSales) * 100
+            : 0;
 
-        $ordersChangePercent      = 0;
-        $totalOrdersCount         = $ordersStats->total_count;
-        if ($totalOrdersCount != 0) {
-            $ordersChangePercent = round($ordersStats->ordersCountChange / $totalOrdersCount * 100, 2);
-        }
+        // Orders Count
+        $currentOrders  = Order::where('created_at', '>=', $currentPeriodStart)->count();
+        $previousOrders = Order::whereBetween('created_at', [$previousPeriodStart, $currentPeriodStart])->count();
+        $ordersChange   = $previousOrders > 0
+            ? (($currentOrders - $previousOrders) / $previousOrders) * 100
+            : 0;
 
-        $usersStats = User::selectRaw('
-                COUNT(*) as total_count,
-                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as usersCountChange
-            ', [$date])
-            ->first();
+        // Customers Count
+        $currentUsers  = User::where('created_at', '>=', $currentPeriodStart)->count();
+        $previousUsers = User::whereBetween('created_at', [$previousPeriodStart, $currentPeriodStart])->count();
+        $usersChange   = $previousUsers > 0
+            ? (($currentUsers - $previousUsers) / $previousUsers) * 100
+            : 0;
 
-        $usersChangePercent      = 0;
-        $totalUsersCount         = $usersStats->total_count;
-        if ($totalUsersCount != 0) {
-            $usersChangePercent = round($usersStats->usersCountChange / $totalUsersCount * 100, 2);
-        }
+        // Products Count
+        $currentItems  = Item::where('created_at', '>=', $currentPeriodStart)->count();
+        $previousItems = Item::whereBetween('created_at', [$previousPeriodStart, $currentPeriodStart])->count();
+        $itemsChange   = $previousItems > 0
+            ? (($currentItems - $previousItems) / $previousItems) * 100
+            : 0;
 
-        $itemsStats = Item::selectRaw('
-                COUNT(*) as total_count,
-                SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as itemsCountChange
-            ', [$date])
-            ->first();
-
-        $itemsChangePercent      = 0;
-        $totalItemsCount         = $itemsStats->total_count;
-        if ($totalItemsCount != 0) {
-            $itemsChangePercent = round($itemsStats->itemsCountChange / $totalItemsCount * 100, 2);
-        }
-
-        $months      = $request->months;
         $salesData   = Order::selectRaw("
                 DATE_FORMAT(created_at, '%b') as name,
                 YEAR(created_at) as year,
@@ -77,7 +68,7 @@ class DashboardRepository implements DashboardRepositoryInterface
                 SUM(total_amount) as sales,
                 COUNT(*) as orders
             ")
-            ->where('created_at', '>=', now()->subMonths($months))
+            ->where('created_at', '>=', $currentPeriodStart)
             ->where('state', OrderState::Delivered)
             ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), DATE_FORMAT(created_at, '%b')"))
             ->orderBy('year')
@@ -93,6 +84,7 @@ class DashboardRepository implements DashboardRepositoryInterface
                 'categories.name',
                 DB::raw('SUM(item_infos.price) as value')
             )
+            ->where('orders.created_at', '>=', $currentPeriodStart)
             ->where('orders.state', OrderState::Delivered)
             ->groupBy('categories.name')
             ->orderByDesc('value')
@@ -111,24 +103,24 @@ class DashboardRepository implements DashboardRepositoryInterface
         return [
             'stats' => [
                 [
-                    'title'                      => 'Total sales',
-                    'value'                      => $totalSales,
-                    'change'                     => $salesChangePercent,
+                    'title'         => 'Total sales',
+                    'value'         => '$'.$totalSales,
+                    'change'        => round($salesChange, 2),
                 ],
                 [
                     'title'        => 'Orders',
-                    'value'        => $totalOrdersCount,
-                    'change'       => $ordersChangePercent,
+                    'value'        => $currentOrders,
+                    'change'       => round($ordersChange, 2),
                 ],
                 [
-                    'title'        => 'users',
-                    'value'        => $totalUsersCount,
-                    'change'       => $usersChangePercent,
+                    'title'        => 'Users',
+                    'value'        => $currentUsers,
+                    'change'       => round($usersChange, 2),
                 ],
                 [
-                    'title'        => 'items',
-                    'value'        => $totalItemsCount,
-                    'change'       => $itemsChangePercent,
+                    'title'        => 'Items',
+                    'value'        => $currentItems,
+                    'change'       => round($itemsChange, 2),
                 ],
             ],
             'sales_data'    => $salesData,
