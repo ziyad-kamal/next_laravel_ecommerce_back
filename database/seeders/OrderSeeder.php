@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\{Item, Item_info, Order, User};
+use App\Models\{Item, Item_info, Order, Order_item, User};
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -14,19 +14,25 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         $faker       = Factory::create();
-        $itemsId     = Item::pluck('id')->toArray();
         $usersIds    = collect(User::pluck('id')->toArray());
 
-        foreach ($itemsId as $itemId) {
+        // Create 50 orders instead of one per item
+        for ($i = 0; $i < 100; $i++) {
             $date     = $faker->dateTimeBetween('-5 years');
-            $price    = Item_info::where('item_id', $itemId)->value('price');
             $quantity = $faker->numberBetween(1, 3);
 
+            $randomItemIds = Item::inRandomOrder()->take(3)->pluck('id')->toArray();
+
+            // Calculate total amount from all items
+            $totalAmount = 0;
+            foreach ($randomItemIds as $id) {
+                $price = Item_info::where('item_id', $id)->value('price');
+                $totalAmount += $price * $quantity;
+            }
+
             $order = Order::create([
-                'bank_trans_id'        => $faker->numberBetween(5000000, 6000000),
-                'total_amount'         => $price * $quantity,
-                'quantity'             => $quantity,
-                'state'                => $faker->numberBetween(1, 5),
+                'total_amount'         => $totalAmount,
+                'state'                => 4,
                 'method'               => $faker->numberBetween(1, 2),
                 'user_id'              => $usersIds->random(),
                 'date_of_delivery'     => (clone $date)->modify('+3 days'),
@@ -34,8 +40,8 @@ class OrderSeeder extends Seeder
                 'updated_at'           => $date,
             ]);
 
-            $items = Item::inRandomOrder()->take(3)->pluck('id')->toArray();
-            $order->items()->attach($items);
+            $order->items()->attach($randomItemIds);
+            Order_item::where('order_id', $order->id)->update(['quantity' => $quantity]);
         }
     }
 }

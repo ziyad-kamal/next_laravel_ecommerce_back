@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Enums\{OrderMethod, OrderState};
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
@@ -13,6 +13,14 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'state'            => OrderState::class,
+            'method'           => OrderMethod::class,
+        ];
+    }
 
     public function user(): BelongsTo
     {
@@ -29,11 +37,8 @@ class Order extends Model
         return $this->hasOne(Transaction::class);
     }
 
-    protected function casts(): array
+    public function scopeSelection(Builder $query): Builder
     {
-        return [
-            'state'            => OrderState::class,
-            'method'           => OrderMethod::class,
-        ];
+        return $query->select('total_amount', 'state', 'date_of_delivery', 'method', 'id');
     }
 }

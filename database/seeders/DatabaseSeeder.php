@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\{Item};
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,11 +21,12 @@ class DatabaseSeeder extends Seeder
         // $this->call(BrandSeeder::class);
         // $this->call(ItemSeeder::class);
         // $this->call(ItemInfoSeeder::class);
-        // $this->call(OrderSeeder::class);
+        $this->call(OrderSeeder::class);
         // $this->call(CartSeeder::class);
         // $this->call(ReviewSeeder::class);
         // $this->call(TransactionsSeeder::class);
         // $this->call(CitySeeder::class);
+        // Item::whereBetween('id', [310, 399])->update(['category_id' => 210]);
 
     }
 }
