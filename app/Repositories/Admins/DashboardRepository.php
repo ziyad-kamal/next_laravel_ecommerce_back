@@ -19,7 +19,6 @@ class DashboardRepository implements DashboardRepositoryInterface
     {
         $userId       = $request->user()->id;
         $defaultLang  = Cache::get("defaultLang{$userId}", 'en');
-        // Cache::flush();
         // $dashboardData = Cache::remember("dashboard_data_{$defaultLang}", now()->addHours(3), function () use ($request) {
         $currentPeriodStart   = now()->subMonths($request->months);
         $previousPeriodStart  = now()->subMonths($request->months * 2);
@@ -118,7 +117,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         $trafficData = DB::table('visits')
             ->selectRaw('DAYNAME(created_at) as day')
             ->selectRaw('COUNT(*) as visits')
-            ->selectRaw('SUM(CASE WHEN converted = 1 THEN 1 ELSE 0 END) as conversions')
+            ->selectRaw('SUM(CASE WHEN converted = 1 THEN 1 ELSE 0 END) as signup')
             ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
             ->groupBy(DB::raw('DAYOFWEEK(created_at)'), 'day')
             ->orderBy(DB::raw('DAYOFWEEK(created_at)'))

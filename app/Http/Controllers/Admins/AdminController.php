@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
+use App\Notifications\AddAdmin;
 use App\Traits\{CanAccessAdminPanel, Response};
 use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -37,7 +39,9 @@ class AdminController extends Controller
      */
     public function store(AdminRequest $request): AdminResource
     {
-        $admin = Admin::create($request->validated());
+        $admin     = Admin::create($request->validated());
+        $allAdmins = Admin::where('id', 1)->get();
+        Notification::send($allAdmins, new AddAdmin($admin));
 
         return new AdminResource($admin);
     }

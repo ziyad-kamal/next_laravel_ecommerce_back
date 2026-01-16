@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
 
 class OrderResource extends JsonResource
 {
@@ -12,6 +13,9 @@ class OrderResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $defaultLang  = Cache::get("defaultLang{$request->user()?->id}", 'en');
+        Carbon::setLocale($defaultLang);
+
         return [
             'id'                              => $this->id,
             'total_amount'                    => $this->total_amount,
