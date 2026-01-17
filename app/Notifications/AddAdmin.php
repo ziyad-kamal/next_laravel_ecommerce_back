@@ -38,13 +38,16 @@ class AddAdmin extends Notification implements ShouldQueue
 
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
+        $notification = $notifiable->notifications()->latest()->first();
+
         return new BroadcastMessage([
-            'admin_id'      => $this->admin->id,
-            'admin_name'    => $this->admin->name,
-            'title'         => 'New Admin Added',
-            'message'       => "Admin {$this->admin->name} has been added to the system.",
-            'created_at'    => Carbon::parse($this->admin->created_at)->diffForHumans(),
-            'is_read'       => false,
+            'admin_id'             => $this->admin->id,
+            'notification_id'      => $notification->id,
+            'admin_name'           => $this->admin->name,
+            'title'                => 'New Admin Added',
+            'message'              => "Admin {$this->admin->name} has been added to the system.",
+            'created_at'           => Carbon::parse($this->admin->created_at)->diffForHumans(),
+            'is_read'              => false,
         ]);
     }
 
