@@ -38,9 +38,9 @@ Route::controller(SearchController::class)->middleware('auth:sanctum')->group(fu
 });
 
 Route::controller(NotificationController::class)->middleware('auth:sanctum')->group(function () {
-    Route::get('/notifications/index/{admin}', 'index');
-    Route::put('/notifications/update/all/{admin}', 'updateAll');
-    Route::put('/notifications/update/{admin}', 'update');
+    Route::get('/notifications/index', 'index');
+    Route::put('/notifications/update/all', 'updateAll');
+    Route::put('/notifications/update', 'update');
 });
 
 Route::post('/lang', [LangController::class, 'store'])->middleware('auth:sanctum');

@@ -8,7 +8,7 @@ use App\Http\Resources\{NotificationResource};
 use App\Models\Admin;
 use App\Traits\{CanAccessAdminPanel, Response};
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\{JsonResponse, Request};
 
 use function Symfony\Component\Clock\now;
 
@@ -21,23 +21,23 @@ class NotificationController extends Controller
         $this->canAccessAdminPanel();
     }
 
-    public function index(Admin $admin): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $notifications = $admin->notifications;
+        $notifications = Admin::find($request->user()->id)->notifications;
 
         return NotificationResource::collection($notifications);
     }
 
-    public function updateAll(Admin $admin): JsonResponse
+    public function updateAll(Request $request): JsonResponse
     {
-        $admin->notifications()->update(['read_at' => now()]);
+        Admin::find($request->user()->id)->notifications()->update(['read_at' => now()]);
 
         return $this->returnSuccess('you mark all notifications as read');
     }
 
-    public function update(NotificationRequest $request, Admin $admin): JsonResponse
+    public function update(NotificationRequest $request): JsonResponse
     {
-        $admin->notifications()->where('id', $request->notif_id)->update(['read_at' => now()]);
+        Admin::find($request->user()->id)->notifications()->where('id', $request->notif_id)->update(['read_at' => now()]);
 
         return $this->returnSuccess('you mark notification as read');
     }
