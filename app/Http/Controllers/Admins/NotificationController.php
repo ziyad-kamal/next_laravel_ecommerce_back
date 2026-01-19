@@ -23,7 +23,7 @@ class NotificationController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        $notifications = Admin::find($request->user()->id)->notifications;
+        $notifications = Admin::find($request->user()->id)->notifications()->paginate(5);
 
         return NotificationResource::collection($notifications);
     }
