@@ -34,6 +34,14 @@ class AuthRepository implements AuthRepositoryInterface
         return ['token' => $token->plainTextToken, 'user' => $admin];
     }
 
+    // MARK: getProfile
+    public function getProfile(int $id): Admin
+    {
+        $admin = Admin::where('id', $id)->firstOrFail();
+
+        return $admin;
+    }
+
     // MARK: logout
     public function logoutUser(Request $request): void
     {

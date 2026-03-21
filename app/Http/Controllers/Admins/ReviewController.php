@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorereviewRequest;
-use App\Http\Requests\UpdatereviewRequest;
-use App\Models\review;
+use App\Models\Review;
 
 class ReviewController extends Controller
 {
@@ -27,7 +25,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorereviewRequest $request)
+    public function store( $request)
     {
         //
     }
@@ -35,15 +33,15 @@ class ReviewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(review $review)
+    public function show(Review $review)
     {
-        //
+        $review->delete();
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(review $review)
+    public function edit(Review $review)
     {
         //
     }
@@ -51,7 +49,7 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatereviewRequest $request, review $review)
+    public function update( $request, Review $review)
     {
         //
     }
@@ -59,7 +57,7 @@ class ReviewController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(review $review)
+    public function destroy(Review $review)
     {
         //
     }

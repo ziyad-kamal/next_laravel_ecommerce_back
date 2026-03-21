@@ -18,7 +18,7 @@ class AddAdmin extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      */
-    public function via(object $notifiable): array
+    public function via(): array
     {
         return ['database', 'broadcast'];
     }
@@ -26,7 +26,7 @@ class AddAdmin extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      */
-    public function toArray(object $notifiable): array
+    public function toArray(): array
     {
         return [
             'admin_id'      => $this->admin->id,

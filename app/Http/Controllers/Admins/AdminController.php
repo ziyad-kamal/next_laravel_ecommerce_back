@@ -40,7 +40,7 @@ class AdminController extends Controller
     public function store(AdminRequest $request): AdminResource
     {
         $admin     = Admin::create($request->validated());
-        $allAdmins = Admin::where('id', 1)->get();
+        $allAdmins = Admin::where('id', '!=', $request->user()->id)->get();
         Notification::send($allAdmins, new AddAdmin($admin));
 
         return new AdminResource($admin);
