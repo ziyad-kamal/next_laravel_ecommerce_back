@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreVendor_infoRequest;
-use App\Http\Requests\UpdateVendor_infoRequest;
+use App\Http\Requests\{StoreVendor_infoRequest, UpdateVendor_infoRequest};
 use App\Models\Vendor_info;
 
 class VendorInfoController extends Controller

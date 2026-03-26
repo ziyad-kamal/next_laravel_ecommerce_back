@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Item;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Item, User};
 
 class ItemPolicy
 {

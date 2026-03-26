@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Brand;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Brand, User};
 
 class BrandPolicy
 {

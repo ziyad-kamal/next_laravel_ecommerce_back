@@ -25,7 +25,7 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store( $request)
+    public function store($request)
     {
         //
     }
@@ -49,7 +49,7 @@ class ReviewController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update( $request, Review $review)
+    public function update($request, Review $review)
     {
         //
     }

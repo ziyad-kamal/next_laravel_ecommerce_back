@@ -24,13 +24,21 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         $method = $this->method();
+        if ($method  === 'PUT') {
+            return [
+                'name'        => 'required|string|max:50|min:3',
+                'email'       => ['required', 'email', 'max:50', 'min:10', Rule::unique('admins')->ignore($this->user()->id)],
+                'bio'         => 'nullable|string|max:250|min:20',
+                'phone'       => 'required|numeric|digits_between:8,11',
+                'address'     => 'required|string|max:50|min:10',
 
-        if ($this->method() !== 'DELETE') {
+            ];
+        }
+        if ($method !== 'DELETE' && $method !== 'PUT') {
             return [
                 'name'     => 'required|string|max:50|min:3',
                 'email'    => ['required', 'email', 'max:50', 'min:10', Rule::unique('admins')->ignore($this->admin)],
                 'password' => ['required', 'confirmed', 'string', Password::min(8),
-
                     // ->mixedCase()
                     // ->numbers()
                     // ->symbols()

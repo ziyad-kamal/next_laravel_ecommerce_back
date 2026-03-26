@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AdminRole;
 use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,8 @@ class Admin extends Model
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'role'              => AdminRole::class,
+
         ];
     }
 

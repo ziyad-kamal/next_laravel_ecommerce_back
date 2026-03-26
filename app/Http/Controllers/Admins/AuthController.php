@@ -7,7 +7,7 @@ use App\Http\Requests\{AdminRequest, LoginRequest};
 use App\Http\Resources\AdminResource;
 use App\Interfaces\Admins\AuthRepositoryInterface;
 use App\Traits\{CanAccessAdminPanel, Response};
-use Illuminate\Http\Request;
+use Illuminate\Http\{JsonResponse, Request};
 
 class AuthController extends Controller
 {
@@ -35,6 +35,14 @@ class AuthController extends Controller
         $admin = $this->authRepository->getProfile($request->user()->id);
 
         return new AdminResource($admin);
+    }
+
+    // MARK: update
+    public function updateProfile(AdminRequest $request): JsonResponse
+    {
+        $admin = $this->authRepository->updateProfile($request);
+
+        return $this->returnSuccess('you successfully update brand', 'admin', $admin);
     }
 
     public function logout(Request $request)

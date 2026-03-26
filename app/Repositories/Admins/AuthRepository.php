@@ -3,6 +3,7 @@
 namespace App\Repositories\Admins;
 
 use App\Http\Requests\{AdminRequest, LoginRequest};
+use App\Http\Resources\AdminResource;
 use App\Interfaces\Admins\AuthRepositoryInterface;
 use App\Models\{Admin};
 use Illuminate\Http\Request;
@@ -40,6 +41,15 @@ class AuthRepository implements AuthRepositoryInterface
         $admin = Admin::where('id', $id)->firstOrFail();
 
         return $admin;
+    }
+
+    // MARK: getProfile
+    public function updateProfile(AdminRequest $request): AdminResource
+    {
+        $admin = Admin::where('id', $request->user()->id)->firstOrFail();
+        $admin->update($request->validated());
+
+        return new AdminResource($admin);
     }
 
     // MARK: logout

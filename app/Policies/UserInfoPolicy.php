@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\User;
-use App\Models\User_info;
-use Illuminate\Auth\Access\Response;
+use App\Models\{User, User_info};
 
 class UserInfoPolicy
 {

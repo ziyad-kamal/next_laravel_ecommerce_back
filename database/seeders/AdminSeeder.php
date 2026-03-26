@@ -21,11 +21,14 @@ class AdminSeeder extends Seeder
             $name   = $faker->name();
 
             Admin::insert([
-                'name'              => $name,
-                'email'             => $faker->unique()->safeEmail(),
-                'password'          => Hash::make('13131313'),
-                'created_at'        => $date,
-                'updated_at'        => $date,
+                'name'                => $name,
+                'email'               => $faker->unique()->safeEmail(),
+                'bio'                 => $faker->paragraph(),
+                'address'             => $faker->address(),
+                'phone'               => $faker->numberBetween(100000000, 300000000),
+                'password'            => Hash::make('13131313'),
+                'created_at'          => $date,
+                'updated_at'          => $date,
             ]);
         }
     }
