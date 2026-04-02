@@ -37,7 +37,6 @@ class OrderSeeder extends Seeder
                 'user_id'              => $usersIds->random(),
                 'date_of_delivery'     => (clone $date)->modify('+3 days'),
                 'created_at'           => $date,
-                'updated_at'           => $date,
             ]);
 
             $order->items()->attach($randomItemIds);
