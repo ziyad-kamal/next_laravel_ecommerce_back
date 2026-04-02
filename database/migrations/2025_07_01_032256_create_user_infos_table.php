@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('address', 150);
             $table->string('city', 30);
-            $table->string('country', 30);
+            $table->string('country', 60);
             $table->bigInteger('phone', false, true);
             $table->string('card_type', 30)->nullable();
             $table->text('card_num')->nullable();
