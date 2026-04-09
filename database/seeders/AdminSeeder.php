@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -22,7 +21,7 @@ class AdminSeeder extends Seeder
             'bio'                 => $faker->paragraph(),
             'address'             => $faker->address(),
             'phone'               => $faker->numberBetween(100000000, 300000000),
-            'password'            => Hash::make('13131313'),
+            'password'            => '13131313',
         ]);
 
         // for ($i = 0; $i < 100; $i++) {
