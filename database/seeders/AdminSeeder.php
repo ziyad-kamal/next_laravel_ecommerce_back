@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
 
         Admin::create([
             'name'                => 'ziyad',
-            'email'               => 'ziyad@gmail.com',
+            'email'               => 'ziyad1995@gmail.com',
             'bio'                 => $faker->paragraph(),
             'address'             => $faker->address(),
             'phone'               => $faker->numberBetween(100000000, 300000000),
