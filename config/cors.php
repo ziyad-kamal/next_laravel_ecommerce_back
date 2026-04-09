@@ -21,6 +21,7 @@ return [
     'allowed_origins' => [
         'http://localhost:3000',       // Your Next.js dev server
         'http://127.0.0.1:3000',
+        'https://ecocity.info',
         // Add your production domain later, e.g. 'https://your-app.com'
     ],
 
