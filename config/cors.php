@@ -23,6 +23,8 @@ return [
         'https://ecocity.info',
         'http://www.ecocity.info',
         'https://www.ecocity.info',
+        'http://localhost:3000',      // Most common for Next.js
+        'http://127.0.0.1:3000',
     ],
 
     'allowed_origins_patterns' => [
