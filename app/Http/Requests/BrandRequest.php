@@ -29,7 +29,7 @@ class BrandRequest extends FormRequest
             'brands'               => 'required|array|min:1',
             'brands.*.name'        => 'required|string|max:15|min:2',
             'brands.*.trans_lang'  => 'required|string|min:2',
-            'brands.*.id'          => $method == 'put' ? 'required' : ''.'|string|min:2',
+            'brands.*.id'          => $method == 'put' ? 'required' : '',
         ];
     }
 
