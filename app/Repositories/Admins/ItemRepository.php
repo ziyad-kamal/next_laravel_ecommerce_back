@@ -19,7 +19,7 @@ class ItemRepository implements ItemRepositoryInterface
     {
         $userId      = $request->user()->id;
         $defaultLang = Cache::get("defaultLang{$userId}", 'en');
-        $keyToSort   = $request->keyToSort   ?? 'created_at';
+        $keyToSort   = $request->keyToSort;
         $direction   = $request->direction   ?? 'desc';
 
         return Item::query()
@@ -27,6 +27,7 @@ class ItemRepository implements ItemRepositoryInterface
             ->with(['admin', 'category', 'brand', 'item_info'])
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
+            ->orderBy('created_at', $direction)
             ->paginate(10);
     }
 
