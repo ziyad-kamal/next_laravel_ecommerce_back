@@ -27,7 +27,7 @@ class ItemRepository implements ItemRepositoryInterface
             ->with(['admin', 'category', 'brand', 'item_info'])
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
-            ->orderBy('created_at', $direction)
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
     }
 
