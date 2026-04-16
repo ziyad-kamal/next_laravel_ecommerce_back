@@ -19,13 +19,15 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://localhost:3000',       // Your Next.js dev server
-        'http://127.0.0.1:3000',
+        'http://ecocity.info',
+        'https://ecocity.info',
+        'http://www.ecocity.info',
         'https://www.ecocity.info',
-        // Add your production domain later, e.g. 'https://your-app.com'
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^https?://(www\.)?ecocity\.info$#',  // ← catches all variants
+    ],
 
     'allowed_headers' => ['*'],
 
