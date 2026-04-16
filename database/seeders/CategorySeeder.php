@@ -13,15 +13,15 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $faker     = Factory::create();
-        $category  = collect(['electronics', 'clothes', 'accessories']);
-        $admins    = collect(Admin::pluck('id')->toArray());
+        $faker       = Factory::create();
+        $categories  = ['electronics', 'clothes', 'accessories'];
+        $admins      = collect(Admin::pluck('id')->toArray());
 
-        for ($i = 0; $i < $category->count(); $i++) {
+        foreach ($categories as $category) {
             $date      = $faker->dateTimeBetween('-5 years');
 
             $category_id = Category::insertGetId([
-                'name'                   => $category->unique()[$i],
+                'name'                   => $category,
                 'image'                  => 'image',
                 'trans_lang'             => 'en',
                 'admin_id'               => $admins->random(),

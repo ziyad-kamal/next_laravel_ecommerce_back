@@ -13,15 +13,15 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker  = Factory::create();
-        $admins = collect(Admin::pluck('id')->toArray());
-        $brand  = collect(['apple', 'hp', 'dell']);
+        $faker   = Factory::create();
+        $admins  = collect(Admin::pluck('id')->toArray());
+        $brands  = ['apple', 'hp', 'dell'];
 
-        for ($i = 0; $i < 100; $i++) {
+        foreach ($brands as $brand) {
             $date   = $faker->dateTimeBetween('-5 years');
 
             $brand_id = Brand::insertGetId([
-                'name'                   => $brand->random(),
+                'name'                   => $brand,
                 'trans_lang'             => 'en',
                 'admin_id'               => $admins->random(),
                 'created_at'             => $date,
