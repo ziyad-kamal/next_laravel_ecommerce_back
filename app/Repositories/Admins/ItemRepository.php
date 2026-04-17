@@ -28,7 +28,7 @@ class ItemRepository implements ItemRepositoryInterface
             ->where('trans_lang', $defaultLang)
             ->orderBy($keyToSort, $direction)
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
     }
 
     // MARK: store
