@@ -25,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ['middleware' => ['auth:sanctum']]   // ← or 'auth:api' if custom guard
     )
     ->withMiddleware(function (Middleware $middleware): void {
-            $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
+        $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
 
         $middleware->append([PreventXss::class, StoreVisit::class]);
         $middleware->alias([
