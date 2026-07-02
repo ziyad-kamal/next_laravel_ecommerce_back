@@ -3,11 +3,6 @@
 use App\Http\Controllers\Admins\{AdminController, AuthController, BrandController, CategoryController, DashboardController, FileController, ItemController, LangController, NotificationController, OrderController, SearchController, UserController};
 use Illuminate\Support\Facades\Route;
 
-// Handle OPTIONS preflight for all admin-panel routes
-Route::options('{any}', function () {
-    return response()->json([], 204);
-})->where('any', '.*');
-
 Route::controller(AuthController::class)->group(function () {
     Route::post('/signup', 'signup');
     Route::post('/login', 'Login');
