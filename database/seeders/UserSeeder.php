@@ -30,5 +30,13 @@ class UserSeeder extends Seeder
                 'updated_at'         => $date,
             ]);
         }
+
+        User::create([
+            'name'               => 'ziyad',
+            'email'              => 'ziyad1995@gmail.com',
+            'password'           => Hash::make('13131313'),
+            'active'             => $faker->randomElement(['active', 'inactive']), // Fix: get value, not key
+            'email_verified_at'  => $faker->dateTimeBetween('-5 years'), // Fix: use datetime
+        ]);
     }
 }
