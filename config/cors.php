@@ -21,8 +21,8 @@ return [
     'allowed_origins' => [
         'https://ecocity.info',
         'https://www.ecocity.info',
-        'http://localhost:6000',      // Most common for Next.js
-        'http://127.0.0.1:6000',
+        'http://localhost:7777',      // Most common for Next.js
+        'http://127.0.0.1:7777',
         'https://next.ecocity.info',
         'https://www.next.ecocity.info'
     ],
